@@ -17,8 +17,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	repo := repository.PaymentRepository{DB: db}
-	usecase := usecases.PaymentUsecase{Repository: &repo}
+	repo := &repository.PaymentRepository{
+		DB: db,
+	}
+	usecase := usecases.NewPaymentUsecase(repo)
 	controller := controllers.PaymentController{Usecase: usecase}
 
 	r := gin.Default()

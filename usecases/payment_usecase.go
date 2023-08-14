@@ -1,18 +1,24 @@
 // usecases/payment_usecase.go
 package usecases
 
-import (
-	"promptlabth/ms-payments/entities"
-)
+import "promptlabth/ms-payments/entities"
 
-type PaymentRepository interface {
-	Store(payment entities.Payment) error
+type PaymentUsecase interface {
+	ProcessPayment(payment entities.Payment) error
 }
 
-type PaymentUsecase struct {
+type paymentUsecaseImpl struct {
 	Repository PaymentRepository
 }
 
-func (u *PaymentUsecase) ProcessPayment(payment entities.Payment) error {
+func (u *paymentUsecaseImpl) ProcessPayment(payment entities.Payment) error {
 	return u.Repository.Store(payment)
+}
+
+func NewPaymentUsecase(repo PaymentRepository) PaymentUsecase {
+	return &paymentUsecaseImpl{Repository: repo}
+}
+
+type PaymentRepository interface {
+	Store(payment entities.Payment) error
 }
