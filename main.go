@@ -1,13 +1,13 @@
 package main
 
 import (
+	"database/sql"
+	"github.com/gin-gonic/gin"
+	_ "github.com/lib/pq"
+	"log"
 	"promptlabth/ms-payments/controllers"
 	"promptlabth/ms-payments/repository"
 	"promptlabth/ms-payments/usecases"
-	"github.com/gin-gonic/gin"
-	"database/sql"
-	_ "github.com/lib/pq"
-	"log"
 )
 
 func main() {
@@ -25,5 +25,11 @@ func main() {
 
 	r := gin.Default()
 	r.POST("/payment", controller.CreatePayment)
+
+	// Health check endpoint
+	r.GET("/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{"status": "UP"})
+	})
+
 	r.Run(":8080")
 }
