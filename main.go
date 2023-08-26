@@ -23,7 +23,7 @@ func main() {
 		
 	}
 	// auto migrate
-	database.DB.AutoMigrate()
+	// database.DB.AutoMigrate()
 
 	repo := &repository.PaymentRepository{
 		DB: database.DB.DB(),
