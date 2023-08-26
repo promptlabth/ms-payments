@@ -2,11 +2,18 @@
 package entities
 
 type Payment struct {
-	TransactionID       int
-	UserID              int
-	PaymentMethodID     int
-	Coin                float64
-	TransactionStripeID *string
+	Id                  int `gorm:"primaryKey;autoIncrement:true"`
+	Coin                int
+	TransactionStripeID string
 	Datetime            string
-	FeatureID           *int
+
+	// user
+	UserID              *uint          `valid:"-"`
+	User                User          `gorm:"references:Id" valid:"-"`
+	// payment
+	PaymentMethodID     *uint          `valid:"-"`
+	PaymentMethod       PaymentMethod `gorm:"references:Id" valid:"-"`
+	// feature
+	FeatureID           *uint    `valid:"-"`
+	Feature             Feature `gorm:"references:Id" valid:"-"`
 }

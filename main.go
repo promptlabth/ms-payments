@@ -1,24 +1,32 @@
 package main
 
 import (
-	"database/sql"
-	"github.com/gin-gonic/gin"
-	_ "github.com/lib/pq"
+	"fmt"
 	"log"
 	"promptlabth/ms-payments/controllers"
+	"promptlabth/ms-payments/database"
 	"promptlabth/ms-payments/repository"
 	"promptlabth/ms-payments/usecases"
+
+	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
+	_ "github.com/lib/pq"
 )
+var err error
 
 func main() {
-	connStr := "user=username dbname=mydb sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
+	database.DB, err = gorm.Open("postgres", database.DbURL(database.BuildDBConfig()))
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("database connect error: ",err)
+	}else{
+		fmt.Println("connect database successful")
+		
 	}
+	// auto migrate
+	database.DB.AutoMigrate()
 
 	repo := &repository.PaymentRepository{
-		DB: db,
+		DB: database.DB.DB(),
 	}
 	usecase := usecases.NewPaymentUsecase(repo)
 	controller := controllers.PaymentController{Usecase: usecase}
