@@ -7,10 +7,13 @@ import (
 	"promptlabth/ms-payments/database"
 	"promptlabth/ms-payments/repository"
 	"promptlabth/ms-payments/usecases"
+	. "promptlabth/ms-payments/entities"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
+
+
 )
 var err error
 
@@ -23,8 +26,8 @@ func main() {
 		
 	}
 	// auto migrate
+	database.DB.AutoMigrate(&Coin{},&Feature{},&Payment{},&PaymentMethod{},&Feature{})
 	// database.DB.AutoMigrate()
-
 	repo := &repository.PaymentRepository{
 		DB: database.DB.DB(),
 	}
