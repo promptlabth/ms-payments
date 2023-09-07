@@ -17,4 +17,5 @@ func CoinRoute(r *gin.Engine, DB *gorm.DB) {
 	r.GET("coin", coinController.GetAllCoins)
 	r.GET("coin/:id", coinController.GetACoin)
 	r.POST("coin", coinController.CreateACoin)
+	r.PATCH("coin/:id", coinController.UpdateACoin)
 }

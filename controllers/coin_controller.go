@@ -48,3 +48,14 @@ func (t *CoinController) CreateACoin(c *gin.Context) {
 		c.JSON(http.StatusOK, newCoin)
 	}
 }
+
+func (t *CoinController) UpdateACoin(c *gin.Context) {
+	var newCoin entities.Coin
+	if err := c.ShouldBindJSON(&newCoin); err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	}
+
+	if err := t.coinUseCase.UpdateACoin(&newCoin, c.Param("id")); err != nil {
+
+	}
+}

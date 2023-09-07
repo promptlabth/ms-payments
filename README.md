@@ -46,3 +46,10 @@ go test ./...
 
 
 
+
+## in this code will split to 5 part of the code
+1. `entities` it will be create a entity and struct for the code
+2. `repositories` it will be for manage a database of the struct => select, insert, update, delete etc.
+3. `usecases` it will contain a business usecase of the repository => before select should do something ? before insert should before do some thing ?
+4. `controllers` it will be for validate a data and prepare a data before send a data to business usecase
+5. `routes` is for define a routing url 

@@ -45,7 +45,9 @@ func main() {
 
 	r := gin.Default()
 
+	// the clean arch
 	routes.CoinRoute(r, database.DB)
+
 	r.POST("/payment", controller.CreatePayment)
 
 	// Health check endpoint
