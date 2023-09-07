@@ -8,3 +8,7 @@ type Coin struct {
 	UserID *int `valid:"-"`
 	User   User `gorm:"references:Id" valid:"-"`
 }
+
+func (b *Coin) TableName() string {
+	return "coin"
+}

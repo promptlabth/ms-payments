@@ -13,3 +13,8 @@ type Feature struct {
 	Payment []Payment `gorm:"foreignKey:FeatureID"`
 
 }
+
+
+func (b *Feature) TableName() string {
+	return "feature"
+}

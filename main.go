@@ -5,29 +5,38 @@ import (
 	"log"
 	"promptlabth/ms-payments/controllers"
 	"promptlabth/ms-payments/database"
-	"promptlabth/ms-payments/repository"
-	"promptlabth/ms-payments/usecases"
 	. "promptlabth/ms-payments/entities"
+	"promptlabth/ms-payments/repository"
+	"promptlabth/ms-payments/routes"
+	"promptlabth/ms-payments/usecases"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
-
-
 )
+
 var err error
 
 func main() {
 	database.DB, err = gorm.Open("postgres", database.DbURL(database.BuildDBConfig()))
+	defer database.DB.Close()
 	if err != nil {
-		log.Fatal("database connect error: ",err)
-	}else{
+		log.Fatal("database connect error: ", err)
+	} else {
 		fmt.Println("connect database successful")
-		
+
 	}
 	// auto migrate
-	database.DB.AutoMigrate(&Coin{},&Feature{},&Payment{},&PaymentMethod{},&Feature{})
+	database.DB.AutoMigrate(
+		&Coin{},
+		&Feature{},
+		&Payment{},
+		&PaymentMethod{},
+		&Feature{},
+		&User{},
+	)
 	// database.DB.AutoMigrate()
+
 	repo := &repository.PaymentRepository{
 		DB: database.DB.DB(),
 	}
@@ -35,6 +44,8 @@ func main() {
 	controller := controllers.PaymentController{Usecase: usecase}
 
 	r := gin.Default()
+
+	routes.CoinRoute(r, database.DB)
 	r.POST("/payment", controller.CreatePayment)
 
 	// Health check endpoint
