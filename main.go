@@ -47,6 +47,7 @@ func main() {
 
 	// the clean arch
 	routes.CoinRoute(r, database.DB)
+	routes.PaymentSubscriptionRoute(r, database.DB)
 
 	r.POST("/payment", controller.CreatePayment)
 

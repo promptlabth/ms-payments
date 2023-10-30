@@ -43,7 +43,7 @@ func TestCreatePaymentSubscription(t *testing.T) {
 			c.Request = req
 
 			// Create the controller and call the function
-			controller := &PaymentSubscriptionController{Usecase: &mockPaymentSubscriptionUsecase{}}
+			controller := &PaymentSubscriptionController{paymentSubscriptionUsecase: &mockPaymentSubscriptionUsecase{}}
 			controller.CreatePaymentSubscription(c)
 
 			// Assert the response status code
