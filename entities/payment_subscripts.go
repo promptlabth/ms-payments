@@ -1,7 +1,7 @@
 // entities/subscriptions_payments.go
 package entities
 
-type SubscriptionsPayments struct {
+type PaymentSubscription struct {
 	Id                  int `gorm:"primaryKey;autoIncrement:true"`
 	TransactionStripeID string
 	Datetime            string
@@ -24,6 +24,6 @@ type SubscriptionsPayments struct {
 
 }
 
-func (b *SubscriptionsPayments) TableName() string {
+func (b *PaymentSubscription) TableName() string {
 	return "subscriptions_payments"
 }

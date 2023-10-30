@@ -11,7 +11,7 @@ type PaymentSubscriptionsRepository struct {
 	DB *sql.DB
 }
 
-func (r *PaymentSubscriptionsRepository) Store(payment entities.SubscriptionsPayments) error {
+func (r *PaymentSubscriptionsRepository) Store(payment entities.PaymentSubscription) error {
 	now := time.Now()
 	oneMonthLater := now.AddDate(0, 1, 0)
 	_, err := r.DB.Exec(`INSERT INTO payments (UserID, PaymentMethodsID, PlanID, TransactionStripeID, Datetime, StartDatetime, EndDatetime, SubscriptionStatus) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,

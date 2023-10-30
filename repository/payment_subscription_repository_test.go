@@ -20,13 +20,13 @@ func TestStoreSubscription(t *testing.T) {
 	// Set up the test cases
 	tests := []struct {
 		name    string
-		payment entities.SubscriptionsPayments
+		payment entities.PaymentSubscription
 		setup   func(mock sqlmock.Sqlmock)
 		wantErr bool
 	}{
 		{
 			name: "success",
-			payment: entities.SubscriptionsPayments{
+			payment: entities.PaymentSubscription{
 				UserID:             uintPtr(1),
 				PaymentMethodID:    uintPtr(2),
 				Plan:               plan,
@@ -41,7 +41,7 @@ func TestStoreSubscription(t *testing.T) {
 		},
 		{
 			name: "database error",
-			payment: entities.SubscriptionsPayments{
+			payment: entities.PaymentSubscription{
 				UserID:             uintPtr(1),
 				PaymentMethodID:    uintPtr(2),
 				Plan:               plan,
