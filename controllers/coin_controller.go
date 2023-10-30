@@ -56,6 +56,6 @@ func (t *CoinController) UpdateACoin(c *gin.Context) {
 	}
 
 	if err := t.coinUseCase.UpdateACoin(&newCoin, c.Param("id")); err != nil {
-
+		c.AbortWithStatus(http.StatusNotFound)
 	}
 }
