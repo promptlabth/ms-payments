@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"errors"
+	"fmt"
 	"promptlabth/ms-payments/entities"
 )
 
@@ -25,6 +26,9 @@ func (u *paymentSubscriptionImpl) ProcessSubscriptionPayments(subscriptions_paym
 	if subscriptions_payment.TransactionStripeID == "" {
 		return errors.New("missing Stripe ID")
 	}
+
+	fmt.Println("subscriptions_payment")
+	fmt.Println(subscriptions_payment)
 
 	return u.Repository.Store(subscriptions_payment)
 }
