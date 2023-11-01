@@ -34,6 +34,7 @@ func main() {
 		&PaymentMethod{},
 		&Feature{},
 		&User{},
+		&PaymentSubscription{},
 	)
 	// database.DB.AutoMigrate()
 

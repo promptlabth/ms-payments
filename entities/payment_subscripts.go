@@ -1,12 +1,14 @@
 // entities/subscriptions_payments.go
 package entities
 
+import "time"
+
 type PaymentSubscription struct {
 	Id                  int `gorm:"primaryKey;autoIncrement:true"`
 	TransactionStripeID string
-	Datetime            string
-	StartDatetime       string
-	EndDatetime         string
+	Datetime            time.Time
+	StartDatetime       time.Time
+	EndDatetime         time.Time
 	SubscriptionStatus  string
 
 	// user
@@ -20,8 +22,6 @@ type PaymentSubscription struct {
 	// plan
 	PlanID *uint `valid:"-"`
 	Plan   Plan  `gorm:"references:Id" valid:"-"`
-
-
 }
 
 func (b *PaymentSubscription) TableName() string {

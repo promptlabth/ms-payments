@@ -24,14 +24,14 @@ func (t *PaymentSubscriptionsRepository) Store(payment entities.PaymentSubscript
 	newPayment := entities.PaymentSubscription{
 		TransactionStripeID: payment.TransactionStripeID,
 		PaymentMethod:       payment.PaymentMethod,
-		StartDatetime:       now.String(),
-		EndDatetime:         oneMonthLater.GoString(),
-		Plan:                payment.Plan,
+		StartDatetime:       now,
+		EndDatetime:         oneMonthLater,
+		PlanID:              payment.PlanID,
 		SubscriptionStatus:  "active",
-		User:                payment.User,
-		Datetime:            now.GoString(),
+		UserID:              payment.UserID,
+		Datetime:            now,
 	}
-	if err := t.conn.Create(newPayment).Error; err != nil {
+	if err := t.conn.Create(&newPayment).Error; err != nil {
 		return err
 	}
 	return nil
