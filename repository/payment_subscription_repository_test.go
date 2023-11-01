@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/jinzhu/gorm"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -27,9 +28,9 @@ func TestStoreSubscription(t *testing.T) {
 		{
 			name: "success",
 			payment: entities.PaymentSubscription{
-				UserID:             uintPtr(1),
-				PaymentMethodID:    uintPtr(2),
-				Plan:               plan,
+				UserID:              uintPtr(1),
+				PaymentMethodID:     uintPtr(2),
+				Plan:                plan,
 				TransactionStripeID: "tx_123",
 			},
 			setup: func(mock sqlmock.Sqlmock) {
@@ -42,9 +43,9 @@ func TestStoreSubscription(t *testing.T) {
 		{
 			name: "database error",
 			payment: entities.PaymentSubscription{
-				UserID:             uintPtr(1),
-				PaymentMethodID:    uintPtr(2),
-				Plan:               plan,
+				UserID:              uintPtr(1),
+				PaymentMethodID:     uintPtr(2),
+				Plan:                plan,
 				TransactionStripeID: "tx_123",
 			},
 			setup: func(mock sqlmock.Sqlmock) {
@@ -59,10 +60,10 @@ func TestStoreSubscription(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Set up the mock database and repository
-			db, mock, err := sqlmock.New()
+			mockDb, mock, err := sqlmock.New()
 			assert.NoError(t, err)
-
-			repo := &PaymentSubscriptionsRepository{DB: db}
+			db, err := gorm.Open("postgres", mockDb)
+			repo := &PaymentSubscriptionsRepository{conn: db}
 
 			// Set up the expected database interactions
 			if tt.setup != nil {
