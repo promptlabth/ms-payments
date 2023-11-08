@@ -17,6 +17,13 @@ func (m *MockPaymentSubscriptionsRepository) Store(payment_subscriptions entitie
 	return nil // Simulate success
 }
 
+func (m *MockPaymentSubscriptionsRepository) Get(payment *entities.PaymentSubscription, paymentIntentId string) error {
+	if m.ShouldReturnError {
+		return errors.New("repository error")
+	}
+	return nil // Simulate success
+}
+
 func TestSubscriptionPaymentProcess(t *testing.T) {
 	tests := []struct {
 		name                string
@@ -26,13 +33,13 @@ func TestSubscriptionPaymentProcess(t *testing.T) {
 	}{
 		{
 			name:    "success",
-			input:   entities.PaymentSubscription{TransactionStripeID: "stripe_id"},
+			input:   entities.PaymentSubscription{PaymentIntentId: "stripe_id"},
 			wantErr: false,
 		},
 		{
 			name:                "repository error",
 			repoShouldReturnErr: true,
-			input:               entities.PaymentSubscription{TransactionStripeID: "stripe_id"},
+			input:               entities.PaymentSubscription{PaymentIntentId: "stripe_id"},
 			wantErr:             true,
 		},
 		{

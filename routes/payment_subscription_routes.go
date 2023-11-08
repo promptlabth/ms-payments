@@ -13,7 +13,6 @@ func PaymentSubscriptionRoute(r *gin.Engine, DB *gorm.DB) {
 	// 1. Initialize the PaymentSubscriptionsRepository
 	repo := repository.NewPaymentScriptionRepository(DB)
 
-
 	// 2. Initialize the PaymentSubscriptionUsecase
 	paymentSubscriptionUsecase := usecases.NewPaymentSubscriptionUsecase(repo)
 

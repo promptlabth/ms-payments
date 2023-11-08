@@ -4,12 +4,12 @@ package entities
 import "time"
 
 type PaymentSubscription struct {
-	Id                  int `gorm:"primaryKey;autoIncrement:true"`
-	TransactionStripeID string
-	Datetime            time.Time
-	StartDatetime       time.Time
-	EndDatetime         time.Time
-	SubscriptionStatus  string
+	Id                 int `gorm:"primaryKey;autoIncrement:true"`
+	PaymentIntentId    string
+	Datetime           time.Time
+	StartDatetime      time.Time
+	EndDatetime        time.Time
+	SubscriptionStatus string
 
 	// user
 	UserID *uint `valid:"-"`
@@ -25,7 +25,7 @@ type PaymentSubscription struct {
 }
 
 type PaymentSubscriptionRequest struct {
-	TransactionStripeID string
+	PaymentIntentId string
 
 	// user
 	UserID *uint `valid:"-"`

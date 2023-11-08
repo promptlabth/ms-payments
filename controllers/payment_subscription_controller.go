@@ -6,7 +6,6 @@ import (
 	"promptlabth/ms-payments/entities"
 	"promptlabth/ms-payments/interfaces"
 	"promptlabth/ms-payments/services"
-	"promptlabth/ms-payments/usecases"
 	"strconv"
 	"time"
 
@@ -14,7 +13,7 @@ import (
 )
 
 type PaymentSubscriptionController struct {
-	paymentSubscriptionUsecase usecases.PaymentSubscriptionUsecase
+	paymentSubscriptionUsecase interfaces.PaymentSubscriptionUseCase
 }
 
 type PaymentSubscriptionRequestWrapper struct {
@@ -40,7 +39,7 @@ func (p *PaymentSubscriptionController) CreatePaymentSubscription(c *gin.Context
 	paymentMethodIDStr := strconv.FormatUint(uint64(*paymentSubscription.PaymentMethodID), 10)
 
 	// Confirm the payment intent
-	success, err := services.ConfirmPaymentIntent(paymentSubscriptionRequest.TransactionStripeID, paymentMethodIDStr)
+	success, err := services.ConfirmPaymentIntent(paymentSubscriptionRequest.PaymentIntentId, paymentMethodIDStr)
 	if err != nil {
 		// Log the error for debugging
 		fmt.Println("Error confirming payment intent:", err)
@@ -56,6 +55,16 @@ func (p *PaymentSubscriptionController) CreatePaymentSubscription(c *gin.Context
 
 		// Respond with a 400 Bad Request status code
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad Request", "details": "Payment was not successful"})
+		return
+	}
+
+	// validate a PaymentIntentId (find a payment Intent ID)
+	var payment entities.PaymentSubscription
+	if err := p.paymentSubscriptionUsecase.GetSubscriptionPaymentByPaymentIntentId(&payment, paymentSubscriptionRequest.PaymentIntentId); err == nil {
+		fmt.Println("Error processing subscription payments:", err)
+
+		// Respond with a 400 Bad Request status code
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad Request", "details": "Failed to process. found a duplicate data"})
 		return
 	}
 
@@ -76,7 +85,6 @@ func (p *PaymentSubscriptionController) CreatePaymentSubscription(c *gin.Context
 	c.JSON(http.StatusOK, gin.H{"status": "Payment data received and saved"})
 }
 
-
 func NewPaymentScriptionController(usecase interfaces.PaymentSubscriptionUseCase) *PaymentSubscriptionController {
 	return &PaymentSubscriptionController{
 		paymentSubscriptionUsecase: usecase,
@@ -87,13 +95,13 @@ func (r *PaymentSubscriptionRequestWrapper) ToPaymentSubscription() entities.Pay
 	now := time.Now()
 	paymentMethodID := uint(1)
 	return entities.PaymentSubscription{
-		TransactionStripeID: r.TransactionStripeID,
-		Datetime:            now,
-		StartDatetime:       now,
-		EndDatetime:         now.Add(30 * 24 * time.Hour), // For example, 30 days later
-		SubscriptionStatus:  "active",
-		UserID:              r.UserID,
-		PaymentMethodID:     &paymentMethodID,
-		PlanID:              r.PlanID,
+		PaymentIntentId:    r.PaymentIntentId,
+		Datetime:           now,
+		StartDatetime:      now,
+		EndDatetime:        now.Add(30 * 24 * time.Hour), // For example, 30 days later
+		SubscriptionStatus: "active",
+		UserID:             r.UserID,
+		PaymentMethodID:    &paymentMethodID,
+		PlanID:             r.PlanID,
 	}
 }

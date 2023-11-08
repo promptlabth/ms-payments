@@ -28,10 +28,10 @@ func TestStoreSubscription(t *testing.T) {
 		{
 			name: "success",
 			payment: entities.PaymentSubscription{
-				UserID:              uintPtr(1),
-				PaymentMethodID:     uintPtr(2),
-				Plan:                plan,
-				TransactionStripeID: "tx_123",
+				UserID:          uintPtr(1),
+				PaymentMethodID: uintPtr(2),
+				Plan:            plan,
+				PaymentIntentId: "tx_123",
 			},
 			setup: func(mock sqlmock.Sqlmock) {
 				mock.ExpectExec(`INSERT INTO payments`).
@@ -43,10 +43,10 @@ func TestStoreSubscription(t *testing.T) {
 		{
 			name: "database error",
 			payment: entities.PaymentSubscription{
-				UserID:              uintPtr(1),
-				PaymentMethodID:     uintPtr(2),
-				Plan:                plan,
-				TransactionStripeID: "tx_123",
+				UserID:          uintPtr(1),
+				PaymentMethodID: uintPtr(2),
+				Plan:            plan,
+				PaymentIntentId: "tx_123",
 			},
 			setup: func(mock sqlmock.Sqlmock) {
 				mock.ExpectExec(`INSERT INTO payments`).

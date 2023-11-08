@@ -44,7 +44,7 @@ func (t *CoinController) CreateACoin(c *gin.Context) {
 
 	if err := t.coinUseCase.CreateACoin(&newCoin); err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
-	}else{
+	} else {
 		c.JSON(http.StatusOK, newCoin)
 	}
 }

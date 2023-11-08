@@ -11,9 +11,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type mockPaymentSubscriptionUsecase struct {}
+type mockPaymentSubscriptionUsecase struct{}
 
 func (m *mockPaymentSubscriptionUsecase) ProcessSubscriptionPayments(payment entities.PaymentSubscription) error {
+	return nil
+}
+
+func (m *mockPaymentSubscriptionUsecase) GetSubscriptionPaymentByPaymentIntentId(payment *entities.PaymentSubscription, paymentIntentId string) error {
 	return nil
 }
 
@@ -34,10 +38,10 @@ func TestCreatePaymentSubscription(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Convert the input to JSON
 			jsonValue, _ := json.Marshal(tt.input)
-			
+
 			// Create a new HTTP request with the JSON body
 			req, _ := http.NewRequest("POST", "/some-endpoint", bytes.NewBuffer(jsonValue))
-			
+
 			// Create a new Gin context and assign the HTTP request to it
 			c, _ := gin.CreateTestContext(httptest.NewRecorder())
 			c.Request = req
