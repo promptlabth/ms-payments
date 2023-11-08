@@ -2,7 +2,7 @@ package database
 
 import (
 	"fmt"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 	"github.com/joho/godotenv"
 	"log"
 	"os"

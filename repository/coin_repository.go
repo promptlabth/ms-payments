@@ -4,7 +4,7 @@ import (
 	"promptlabth/ms-payments/entities"
 	"promptlabth/ms-payments/interfaces"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 	_ "github.com/lib/pq"
 )
 

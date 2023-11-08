@@ -6,7 +6,7 @@ import (
 	"promptlabth/ms-payments/interfaces"
 	"time"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type PaymentSubscriptionsRepository struct {

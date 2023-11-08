@@ -9,17 +9,18 @@ import (
 	"promptlabth/ms-payments/repository"
 	"promptlabth/ms-payments/routes"
 	"promptlabth/ms-payments/usecases"
+	"gorm.io/driver/postgres"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 	_ "github.com/lib/pq"
 )
 
 var err error
 
 func main() {
-	database.DB, err = gorm.Open("postgres", database.DbURL(database.BuildDBConfig()))
-	defer database.DB.Close()
+	database.DB, err = gorm.Open(postgres.Open(database.DbURL(database.BuildDBConfig())), &gorm.Config{})
+	// defer database.DB.Close()
 	if err != nil {
 		log.Fatal("database connect error: ", err)
 	} else {
@@ -38,9 +39,12 @@ func main() {
 	)
 	// database.DB.AutoMigrate()
 
-	repo := &repository.PaymentRepository{
-		DB: database.DB.DB(),
+	repo := &repository.PaymentRepository{}
+	db, err := database.DB.DB()
+	if err != nil {
+		log.Fatal(err)
 	}
+	repo.DB = db
 	usecase := usecases.NewPaymentUsecase(repo)
 	controller := controllers.PaymentController{Usecase: usecase}
 

@@ -6,7 +6,7 @@ import (
 	"promptlabth/ms-payments/usecases"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 func PaymentSubscriptionRoute(r *gin.Engine, DB *gorm.DB) {
