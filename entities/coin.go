@@ -10,5 +10,5 @@ type Coin struct {
 }
 
 func (b *Coin) TableName() string {
-	return "coin"
+	return "coins"
 }

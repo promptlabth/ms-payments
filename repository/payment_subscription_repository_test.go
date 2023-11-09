@@ -6,14 +6,14 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"gorm.io/gorm"
 	"github.com/stretchr/testify/assert"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 func TestStoreSubscription(t *testing.T) {
 	// Sample plan data
 	plan := entities.Plan{
-		Id:       1,
 		PlanType: "premium",
 		Datetime: "2023-01-01T00:00:00Z",
 	}
@@ -61,8 +61,12 @@ func TestStoreSubscription(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Set up the mock database and repository
 			mockDb, mock, err := sqlmock.New()
+			dialector := postgres.New(postgres.Config{
+				Conn:       mockDb,
+				DriverName: "postgres",
+			})
 			assert.NoError(t, err)
-			db, err := gorm.Open("postgres", mockDb)
+			db, err := gorm.Open(dialector, &gorm.Config{})
 			repo := &PaymentSubscriptionsRepository{conn: db}
 
 			// Set up the expected database interactions

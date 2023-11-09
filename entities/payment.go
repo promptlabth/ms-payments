@@ -19,5 +19,5 @@ type Payment struct {
 }
 
 func (b *Payment) TableName() string {
-	return "payment"
+	return "payments"
 }

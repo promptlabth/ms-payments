@@ -4,9 +4,10 @@ type PaymentMethod struct {
 	Id   int `gorm:"primaryKey;autoIncrement:true"`
 	Type string
 
-	Payments []Payment `gorm:"foreignKey:PaymentMethodID"`
+	Payments             []Payment             `gorm:"foreignKey:PaymentMethodID"`
+	PaymentSubscriptions []PaymentSubscription `gorm:"foreignKey:UserID"`
 }
 
 func (b *PaymentMethod) TableName() string {
-	return "patmentMethod"
+	return "payment_methods"
 }

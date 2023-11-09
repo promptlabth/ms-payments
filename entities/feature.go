@@ -11,10 +11,8 @@ type Feature struct {
 	Url          string
 
 	Payment []Payment `gorm:"foreignKey:FeatureID"`
-
 }
 
-
 func (b *Feature) TableName() string {
-	return "feature"
+	return "features"
 }

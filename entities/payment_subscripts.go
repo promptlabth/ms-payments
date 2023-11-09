@@ -24,6 +24,10 @@ type PaymentSubscription struct {
 	Plan   Plan  `gorm:"references:Id" valid:"-"`
 }
 
+func (b *PaymentSubscription) TableName() string {
+	return "subscriptions_payments"
+}
+
 type PaymentSubscriptionRequest struct {
 	PaymentIntentId string
 
@@ -38,8 +42,4 @@ type PaymentSubscriptionRequest struct {
 	// plan
 	PlanID *uint `valid:"-"`
 	Plan   Plan  `gorm:"references:Id" valid:"-"`
-}
-
-func (b *PaymentSubscription) TableName() string {
-	return "subscriptions_payments"
 }
