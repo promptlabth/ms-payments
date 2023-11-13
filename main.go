@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"promptlabth/ms-payments/controllers"
 	"promptlabth/ms-payments/database"
 	"promptlabth/ms-payments/repository"
@@ -43,7 +44,9 @@ func main() {
 	repo.DB = db
 	usecase := usecases.NewPaymentUsecase(repo)
 	controller := controllers.PaymentController{Usecase: usecase}
-
+	if os.Getenv("BaseOn") != "DEV" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	r := gin.Default()
 
 	// the clean arch
@@ -57,5 +60,5 @@ func main() {
 		c.JSON(200, gin.H{"status": "UP"})
 	})
 
-	r.Run(":8000")
+	r.Run()
 }
