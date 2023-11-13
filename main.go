@@ -2,9 +2,12 @@ package main
 
 import (
 	"os"
+	"promptlabth/ms-payments/database"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 func CORSMiddleware() gin.HandlerFunc {
@@ -33,7 +36,7 @@ func CORSMiddleware() gin.HandlerFunc {
 var err error
 
 func main() {
-	// database.DB, err = gorm.Open(postgres.Open(database.DbURL(database.BuildDBConfig())), &gorm.Config{})
+	database.DB, err = gorm.Open(postgres.Open(database.DbURL(database.BuildDBConfig())), &gorm.Config{})
 	// // defer database.DB.Close()
 	// if err != nil {
 	// 	log.Fatal("database connect error: ", err)
