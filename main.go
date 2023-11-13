@@ -62,5 +62,5 @@ func main() {
 		c.JSON(200, gin.H{"status": "UP"})
 	})
 
-	r.Run()
+	r.Run("0.0.0.0:8080")
 }
