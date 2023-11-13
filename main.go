@@ -5,7 +5,6 @@ import (
 	"log"
 	"promptlabth/ms-payments/controllers"
 	"promptlabth/ms-payments/database"
-	. "promptlabth/ms-payments/entities"
 	"promptlabth/ms-payments/repository"
 	"promptlabth/ms-payments/routes"
 	"promptlabth/ms-payments/usecases"
@@ -29,15 +28,15 @@ func main() {
 
 	}
 	// auto migrate
-	database.DB.AutoMigrate(
-		&Coin{},
-		&Feature{},
-		&Payment{},
-		&PaymentMethod{},
-		&Feature{},
-		&User{},
-		&PaymentSubscription{},
-	)
+	// database.DB.AutoMigrate(
+	// 	&Coin{},
+	// 	&Feature{},
+	// 	&Payment{},
+	// 	&PaymentMethod{},
+	// 	&Feature{},
+	// 	&User{},
+	// 	&PaymentSubscription{},
+	// )
 	// database.DB.AutoMigrate()
 
 	repo := &repository.PaymentRepository{}
