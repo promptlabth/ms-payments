@@ -60,5 +60,9 @@ func main() {
 		c.JSON(200, gin.H{"status": "UP"})
 	})
 
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{"hello": "world"})
+	})
+
 	r.Run(":8080")
 }
