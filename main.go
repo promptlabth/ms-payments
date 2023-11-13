@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"promptlabth/ms-payments/controllers"
 	"promptlabth/ms-payments/database"
@@ -23,9 +22,6 @@ func main() {
 	// defer database.DB.Close()
 	if err != nil {
 		log.Fatal("database connect error: ", err)
-	} else {
-		fmt.Println("connect database successful")
-
 	}
 	// auto migrate
 	// database.DB.AutoMigrate(
