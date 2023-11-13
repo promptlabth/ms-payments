@@ -1,4 +1,3 @@
-# Use an official Go runtime as a parent image
 FROM golang:1.21-alpine
 
 WORKDIR /app
@@ -9,4 +8,4 @@ RUN go build -o main
 
 EXPOSE 8080
 
-CMD [ "./main" ]
+CMD ["./main"]
