@@ -26,13 +26,13 @@ jobs:
     
     - name: Build and push Docker image
       run: |
-        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/ms-payment:${{ github.sha }} .
-        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ms-payment:${{ github.sha }}
+        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/payment-ms-promptlabs:${{ github.sha }} .
+        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/payment-ms-promptlabs:${{ github.sha }}
 
     - name: Deploy to Cloud Run
       run: |
-        gcloud run deploy ms-payment \
-        --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/ms-payment:${{ github.sha }} \
+        gcloud run deploy payment-ms-promptlabs \
+        --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/payment-ms-promptlabs:${{ github.sha }} \
         --region asia-southeast1 \
         --platform managed \
         --allow-unauthenticated \
