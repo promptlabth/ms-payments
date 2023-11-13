@@ -88,5 +88,10 @@ func main() {
 		c.JSON(200, gin.H{"hello": "world"})
 	})
 
-	r.Run(":8080")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Default port if not specified
+	}
+
+	r.Run(":" + port)
 }
