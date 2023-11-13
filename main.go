@@ -9,11 +9,12 @@ import (
 	"promptlabth/ms-payments/repository"
 	"promptlabth/ms-payments/routes"
 	"promptlabth/ms-payments/usecases"
+
 	"gorm.io/driver/postgres"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 	_ "github.com/lib/pq"
+	"gorm.io/gorm"
 )
 
 var err error
