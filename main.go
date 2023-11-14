@@ -60,22 +60,14 @@ func main() {
 	// 	&entities.PaymentSubscription{},
 	// )
 	// database.DB.AutoMigrate()
-
-	repo := &repository.PaymentRepository{}
-	db, err := database.DB.DB()
-	if err != nil {
-		log.Fatal(err)
-	}
-	repo.DB = db
-	usecase := usecases.NewPaymentUsecase(repo)
-	controller := controllers.PaymentController{Usecase: usecase}
 	if os.Getenv("BaseOn") != "DEV" {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.Default()
 	// to set CORS
 	r.Use(CORSMiddleware())
-	// the clean arch
+
+	// Health check endpoint
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "UP"})
 	})
@@ -84,12 +76,21 @@ func main() {
 		c.JSON(200, gin.H{"hello": "world"})
 	})
 
+	repo := &repository.PaymentRepository{}
+	db, err := database.DB.DB()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// the clean arch
+	repo.DB = db
+	usecase := usecases.NewPaymentUsecase(repo)
+	controller := controllers.PaymentController{Usecase: usecase}
+
 	routes.CoinRoute(r, database.DB)
 	routes.PaymentSubscriptionRoute(r, database.DB)
 
 	r.POST("/payment", controller.CreatePayment)
-
-	// Health check endpoint
 
 	port := os.Getenv("PORT")
 	if port == "" {

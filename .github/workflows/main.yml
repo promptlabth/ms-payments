@@ -38,4 +38,5 @@ jobs:
         --allow-unauthenticated \
         --set-env-vars DB_USER=${{ secrets.DB_USER }},DB_PASSWORD=${{ secrets.DB_PASSWORD }},DB_HOST=${{ secrets.DB_HOST }},DB_PORT=${{ secrets.DB_PORT }},DB_NAME=${{ secrets.DB_NAME }},DEPLOY=PROD,GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }},STRIPE_KEY=${{ secrets.STRIPE_KEY }},GIN_MODE=release,BaseOn=Production \
         --max-instances=10 \
+        --no-traffic \
         --memory 1Gi
