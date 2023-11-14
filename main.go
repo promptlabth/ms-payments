@@ -6,7 +6,6 @@ import (
 	"os"
 	"promptlabth/ms-payments/controllers"
 	"promptlabth/ms-payments/database"
-	"promptlabth/ms-payments/entities"
 	"promptlabth/ms-payments/repository"
 	"promptlabth/ms-payments/routes"
 	"promptlabth/ms-payments/usecases"
@@ -51,15 +50,15 @@ func main() {
 		log.Fatal("database connect error: ", err)
 	}
 	// auto migrate
-	database.DB.AutoMigrate(
-		&entities.Coin{},
-		&entities.Feature{},
-		&entities.Payment{},
-		&entities.PaymentMethod{},
-		&entities.Feature{},
-		&entities.User{},
-		&entities.PaymentSubscription{},
-	)
+	// database.DB.AutoMigrate(
+	// 	&entities.Coin{},
+	// 	&entities.Feature{},
+	// 	&entities.Payment{},
+	// 	&entities.PaymentMethod{},
+	// 	&entities.Feature{},
+	// 	&entities.User{},
+	// 	&entities.PaymentSubscription{},
+	// )
 	// database.DB.AutoMigrate()
 
 	repo := &repository.PaymentRepository{}
