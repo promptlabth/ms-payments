@@ -2,8 +2,9 @@ package usecases
 
 import (
 	"errors"
-	"promptlabth/ms-payments/entities"
 	"testing"
+
+	"github.com/promptlabth/ms-payments/entities"
 )
 
 type MockPaymentSubscriptionsRepository struct {

@@ -1,14 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
-	"promptlabth/ms-payments/controllers"
-	"promptlabth/ms-payments/database"
-	"promptlabth/ms-payments/repository"
-	"promptlabth/ms-payments/routes"
-	"promptlabth/ms-payments/usecases"
+
+	"github.com/promptlabth/ms-payments/controllers"
+	"github.com/promptlabth/ms-payments/database"
+	"github.com/promptlabth/ms-payments/repository"
+	"github.com/promptlabth/ms-payments/routes"
+	"github.com/promptlabth/ms-payments/usecases"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
@@ -43,7 +43,7 @@ var err error
 
 func main() {
 	database.DB, err = gorm.Open(postgres.Open(
-		fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_USER"), os.Getenv("DB_NAME")),
+		database.DbURL(database.BuildDBConfig()),
 	), &gorm.Config{})
 	// defer database.DB.Close()
 	if err != nil {

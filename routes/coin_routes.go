@@ -1,9 +1,9 @@
 package routes
 
 import (
-	"promptlabth/ms-payments/controllers"
-	"promptlabth/ms-payments/repository"
-	"promptlabth/ms-payments/usecases"
+	"github.com/promptlabth/ms-payments/controllers"
+	"github.com/promptlabth/ms-payments/repository"
+	"github.com/promptlabth/ms-payments/usecases"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

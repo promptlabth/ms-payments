@@ -1,4 +1,4 @@
-module promptlabth/ms-payments
+module github.com/promptlabth/ms-payments
 
 go 1.20
 

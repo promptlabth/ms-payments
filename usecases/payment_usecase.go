@@ -1,7 +1,7 @@
 // usecases/payment_usecase.go
 package usecases
 
-import "promptlabth/ms-payments/entities"
+import "github.com/promptlabth/ms-payments/entities"
 
 type PaymentUsecase interface {
 	ProcessPayment(payment entities.Payment) error

@@ -3,8 +3,9 @@ package usecases
 import (
 	"errors"
 	"fmt"
-	"promptlabth/ms-payments/entities"
-	"promptlabth/ms-payments/interfaces"
+
+	"github.com/promptlabth/ms-payments/entities"
+	"github.com/promptlabth/ms-payments/interfaces"
 )
 
 // type NewPaymentSubscriptionsUsecase interface

@@ -3,11 +3,12 @@ package controllers
 import (
 	"fmt"
 	"net/http"
-	"promptlabth/ms-payments/entities"
-	"promptlabth/ms-payments/interfaces"
-	"promptlabth/ms-payments/services"
 	"strconv"
 	"time"
+
+	"github.com/promptlabth/ms-payments/entities"
+	"github.com/promptlabth/ms-payments/interfaces"
+	"github.com/promptlabth/ms-payments/services"
 
 	"github.com/gin-gonic/gin"
 )

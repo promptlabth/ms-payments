@@ -2,8 +2,9 @@ package repository
 
 import (
 	"errors"
-	"promptlabth/ms-payments/entities"
 	"testing"
+
+	"github.com/promptlabth/ms-payments/entities"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"

@@ -1,6 +1,6 @@
 package interfaces
 
-import "promptlabth/ms-payments/entities"
+import "github.com/promptlabth/ms-payments/entities"
 
 type CoinUseCase interface {
 	GetAllCoins() (t []entities.Coin, err error)

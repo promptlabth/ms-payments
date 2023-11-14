@@ -1,11 +1,11 @@
 package repository
 
 import (
-	"promptlabth/ms-payments/entities"
-	"promptlabth/ms-payments/interfaces"
+	"github.com/promptlabth/ms-payments/entities"
+	"github.com/promptlabth/ms-payments/interfaces"
 
-	"gorm.io/gorm"
 	_ "github.com/lib/pq"
+	"gorm.io/gorm"
 )
 
 type coinRepository struct {

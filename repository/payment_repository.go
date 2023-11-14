@@ -3,8 +3,9 @@ package repository
 
 import (
 	"database/sql"
-	"promptlabth/ms-payments/entities"
 	"time"
+
+	"github.com/promptlabth/ms-payments/entities"
 )
 
 type PaymentRepository struct {

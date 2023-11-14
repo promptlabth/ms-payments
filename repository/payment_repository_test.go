@@ -1,9 +1,10 @@
 package repository
 
 import (
-	"promptlabth/ms-payments/entities"
 	"testing"
+
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/promptlabth/ms-payments/entities"
 )
 
 func TestStore(t *testing.T) {

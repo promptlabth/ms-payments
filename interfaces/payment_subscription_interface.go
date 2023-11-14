@@ -1,6 +1,6 @@
 package interfaces
 
-import "promptlabth/ms-payments/entities"
+import "github.com/promptlabth/ms-payments/entities"
 
 type PaymentSubscriptionUseCase interface {
 	ProcessSubscriptionPayments(payment entities.PaymentSubscription) error

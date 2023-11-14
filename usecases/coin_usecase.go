@@ -1,8 +1,8 @@
 package usecases
 
 import (
-	"promptlabth/ms-payments/entities"
-	"promptlabth/ms-payments/interfaces"
+	"github.com/promptlabth/ms-payments/entities"
+	"github.com/promptlabth/ms-payments/interfaces"
 )
 
 type coinUseCase struct {

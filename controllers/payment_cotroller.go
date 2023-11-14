@@ -2,9 +2,9 @@
 package controllers
 
 import (
-	"promptlabth/ms-payments/entities"
-	"promptlabth/ms-payments/usecases"
 	"github.com/gin-gonic/gin"
+	"github.com/promptlabth/ms-payments/entities"
+	"github.com/promptlabth/ms-payments/usecases"
 )
 
 type PaymentController struct {

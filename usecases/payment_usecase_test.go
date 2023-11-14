@@ -2,8 +2,9 @@
 package usecases
 
 import (
-	"promptlabth/ms-payments/entities"
 	"testing"
+
+	"github.com/promptlabth/ms-payments/entities"
 )
 
 type MockPaymentRepository struct{}
@@ -21,9 +22,9 @@ func TestProcessPayment(t *testing.T) {
 	err := usecase.ProcessPayment(entities.Payment{
 		// UserID:              1,
 		// PaymentMethodID:     2,
-		Coin:                100.0,
+		Coin: 100.0,
 		// TransactionStripeID: &stripeID,
-		FeatureID:           nil,
+		FeatureID: nil,
 	})
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)

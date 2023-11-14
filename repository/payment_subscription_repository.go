@@ -2,9 +2,10 @@
 package repository
 
 import (
-	"promptlabth/ms-payments/entities"
-	"promptlabth/ms-payments/interfaces"
 	"time"
+
+	"github.com/promptlabth/ms-payments/entities"
+	"github.com/promptlabth/ms-payments/interfaces"
 
 	"gorm.io/gorm"
 )
