@@ -2,8 +2,14 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"promptlabth/ms-payments/controllers"
 	"promptlabth/ms-payments/database"
+	"promptlabth/ms-payments/entities"
+	"promptlabth/ms-payments/repository"
+	"promptlabth/ms-payments/routes"
+	"promptlabth/ms-payments/usecases"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
@@ -40,41 +46,41 @@ func main() {
 	database.DB, err = gorm.Open(postgres.Open(
 		fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_USER"), os.Getenv("DB_NAME")),
 	), &gorm.Config{})
-	// // defer database.DB.Close()
-	// if err != nil {
-	// 	log.Fatal("database connect error: ", err)
-	// }
-	// // auto migrate
-	// database.DB.AutoMigrate(
-	// 	&entities.Coin{},
-	// 	&entities.Feature{},
-	// 	&entities.Payment{},
-	// 	&entities.PaymentMethod{},
-	// 	&entities.Feature{},
-	// 	&entities.User{},
-	// 	&entities.PaymentSubscription{},
-	// )
-	// // database.DB.AutoMigrate()
+	// defer database.DB.Close()
+	if err != nil {
+		log.Fatal("database connect error: ", err)
+	}
+	// auto migrate
+	database.DB.AutoMigrate(
+		&entities.Coin{},
+		&entities.Feature{},
+		&entities.Payment{},
+		&entities.PaymentMethod{},
+		&entities.Feature{},
+		&entities.User{},
+		&entities.PaymentSubscription{},
+	)
+	// database.DB.AutoMigrate()
 
-	// repo := &repository.PaymentRepository{}
-	// db, err := database.DB.DB()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// repo.DB = db
-	// usecase := usecases.NewPaymentUsecase(repo)
-	// controller := controllers.PaymentController{Usecase: usecase}
-	// if os.Getenv("BaseOn") != "DEV" {
-	// 	gin.SetMode(gin.ReleaseMode)
-	// }
+	repo := &repository.PaymentRepository{}
+	db, err := database.DB.DB()
+	if err != nil {
+		log.Fatal(err)
+	}
+	repo.DB = db
+	usecase := usecases.NewPaymentUsecase(repo)
+	controller := controllers.PaymentController{Usecase: usecase}
+	if os.Getenv("BaseOn") != "DEV" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	r := gin.Default()
 	// to set CORS
 	r.Use(CORSMiddleware())
 	// the clean arch
-	// routes.CoinRoute(r, database.DB)
-	// routes.PaymentSubscriptionRoute(r, database.DB)
+	routes.CoinRoute(r, database.DB)
+	routes.PaymentSubscriptionRoute(r, database.DB)
 
-	// r.POST("/payment", controller.CreatePayment)
+	r.POST("/payment", controller.CreatePayment)
 
 	// Health check endpoint
 	r.GET("/health", func(c *gin.Context) {
