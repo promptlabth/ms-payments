@@ -76,12 +76,6 @@ func main() {
 	// to set CORS
 	r.Use(CORSMiddleware())
 	// the clean arch
-	routes.CoinRoute(r, database.DB)
-	routes.PaymentSubscriptionRoute(r, database.DB)
-
-	r.POST("/payment", controller.CreatePayment)
-
-	// Health check endpoint
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "UP"})
 	})
@@ -89,6 +83,13 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{"hello": "world"})
 	})
+
+	routes.CoinRoute(r, database.DB)
+	routes.PaymentSubscriptionRoute(r, database.DB)
+
+	r.POST("/payment", controller.CreatePayment)
+
+	// Health check endpoint
 
 	port := os.Getenv("PORT")
 	if port == "" {
