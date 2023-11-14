@@ -2,10 +2,10 @@ package database
 
 import (
 	"fmt"
-	"gorm.io/gorm"
-	"github.com/joho/godotenv"
-	"log"
 	"os"
+
+	"github.com/joho/godotenv"
+	"gorm.io/gorm"
 )
 
 // DB global var for connect DB
@@ -21,10 +21,8 @@ type DBConfig struct {
 
 func BuildDBConfig() *DBConfig {
 	// Load environment variables from the .env file
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	godotenv.Load()
+
 	dbConfig := DBConfig{
 		host:     os.Getenv("DB_HOST"),
 		port:     os.Getenv("DB_PORT"),
