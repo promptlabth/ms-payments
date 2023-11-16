@@ -2,9 +2,10 @@
 package entities
 
 type Plan struct {
-	Id       int `gorm:"primaryKey;autoIncrement:true"`
-	PlanType string
-	Datetime string
+	Id          int    `gorm:"primaryKey;autoIncrement:true"`
+	PlanType    string `gorm:"column:planType"`
+	Datetime    string
+	MaxMessages int `gorm:"column:maxMessages"`
 
 	PaymentSubscriptions []PaymentSubscription `gorm:"foreignKey:PlanID"`
 }
