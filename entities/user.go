@@ -1,12 +1,12 @@
 package entities
 
 type User struct {
-	Id          int `gorm:"primaryKey;autoIncrement:true"`
-	Firebase_id string
+	Id          int    `gorm:"primaryKey;autoIncrement:true"`
+	Firebase_id string `gorm:"uniqueKey"`
 	Name        string
 	Email       string
-	ProfilePic  string
-	StripeId    string // for collecting a stripe customer id
+	Profilepic  string
+	StripeId    string `gorm:"uniqueKey"`
 
 	Payment []Payment `gorm:"foreignKey:UserID"`
 	Coin    []Coin    `gorm:"foreignKey:UserID"`
