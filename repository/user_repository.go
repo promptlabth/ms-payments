@@ -17,14 +17,14 @@ func NewUserRepository(conn *gorm.DB) interfaces.UserRepository {
 }
 
 func (t *userRepository) GetAUser(user *entities.User, id string) (err error) {
-	if err := t.conn.Raw("SELECT * FROM users WHERE id = ?", id).Find(user).Error; err != nil {
+	if err := t.conn.Where("id = ?", id).First(user).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
 func (t *userRepository) GetAUserByFirebaseId(user *entities.User, firebaseId string) (err error) {
-	if err := t.conn.Raw("SELECT * FROM users WHERE firebase_id = ?", firebaseId).Find(&user).Error; err != nil {
+	if err := t.conn.Where("firebase_id = ?", firebaseId).First(&user).Error; err != nil {
 		return err
 	}
 	return nil

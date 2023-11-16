@@ -6,11 +6,12 @@ import (
 	"crypto/cipher"
 	"encoding/base64"
 	"fmt"
+	"os"
 )
 
 func GetAESEncrypted(plaintext string) (string, error) {
-	key := "my32digitkey12345678901234567890"
-	iv := "my16digitIvKey12"
+	key := os.Getenv("AES_KEY") // ! Alert ! waiting for a key from gcp secret manager [need 32 character]
+	iv := os.Getenv("AES_VI")   // ! Alert ! waiting for a key from gcp secret manager [need 16 character]
 
 	var plainTextBlock []byte
 	length := len(plaintext)
@@ -41,8 +42,8 @@ func GetAESEncrypted(plaintext string) (string, error) {
 
 // GetAESDecrypted decrypts given text in AES 256 CBC
 func GetAESDecrypted(encrypted string) ([]byte, error) {
-	key := "my32digitkey12345678901234567890"
-	iv := "my16digitIvKey12"
+	key := os.Getenv("AES_KEY") // ! Alert ! waiting for a key from gcp secret manager [need 32 character]
+	iv := os.Getenv("AES_VI")   // ! Alert ! waiting for a key from gcp secret manager [need 16 character]
 
 	ciphertext, err := base64.StdEncoding.DecodeString(encrypted)
 

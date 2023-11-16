@@ -69,6 +69,7 @@ func (t *SubscriptionReqUrlController) GetSubscriptionUrl(c *gin.Context) {
 		}
 	}
 
+	// to create a cehckout url from stripe (make subscription url to customer)
 	checkoutSession, err := services.CreateCheckoutSession(
 		subscriptionReqUrl.PrizeID,
 		"subscription",
