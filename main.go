@@ -6,6 +6,7 @@ import (
 
 	"github.com/promptlabth/ms-payments/controllers"
 	"github.com/promptlabth/ms-payments/database"
+	"github.com/promptlabth/ms-payments/entities"
 	"github.com/promptlabth/ms-payments/repository"
 	"github.com/promptlabth/ms-payments/routes"
 	"github.com/promptlabth/ms-payments/usecases"
@@ -50,15 +51,15 @@ func main() {
 		log.Fatal("database connect error: ", err)
 	}
 	// auto migrate
-	// database.DB.AutoMigrate(
-	// 	&entities.Coin{},
-	// 	&entities.Feature{},
-	// 	&entities.Payment{},
-	// 	&entities.PaymentMethod{},
-	// 	&entities.Feature{},
-	// 	&entities.User{},
-	// 	&entities.PaymentSubscription{},
-	// )
+	database.DB.AutoMigrate(
+		&entities.Coin{},
+		&entities.Feature{},
+		&entities.Payment{},
+		&entities.PaymentMethod{},
+		&entities.Feature{},
+		&entities.User{},
+		&entities.PaymentSubscription{},
+	)
 	// database.DB.AutoMigrate()
 	if os.Getenv("BaseOn") != "DEV" {
 		gin.SetMode(gin.ReleaseMode)
