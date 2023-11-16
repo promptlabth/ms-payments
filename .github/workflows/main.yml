@@ -28,7 +28,7 @@ jobs:
       id: create-cred-firebase-json
       uses: jsdaniell/create-json@v1.2.2
       with:
-        name: "firebase-credential.json"
+        name: "firebase_credential.json"
         json: ${{secrets.FIREBASE_CREDENTIAL}}
     
     - name: Build and push Docker image
