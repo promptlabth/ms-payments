@@ -15,8 +15,8 @@ import (
 func TestStoreSubscription(t *testing.T) {
 	// Sample plan data
 	plan := entities.Plan{
-		PlanType: "premium",
-		Datetime: "2023-01-01T00:00:00Z",
+		PlanType:    "premium",
+		MaxMessages: 50,
 	}
 
 	// Set up the test cases
