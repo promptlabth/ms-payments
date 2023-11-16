@@ -90,6 +90,8 @@ func main() {
 	routes.CoinRoute(r, database.DB)
 	routes.PaymentSubscriptionRoute(r, database.DB)
 
+	routes.SubscriptionRoute(r, database.DB)
+
 	r.POST("/payment", controller.CreatePayment)
 
 	port := os.Getenv("PORT")
