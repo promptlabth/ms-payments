@@ -43,7 +43,7 @@ jobs:
         --region asia-southeast1 \
         --platform managed \
         --allow-unauthenticated \
-        --set-env-vars DB_USER=${{ secrets.DB_USER }},DB_PASSWORD=${{ secrets.DB_PASSWORD }},DB_HOST=${{ secrets.DB_HOST }},DB_PORT=${{ secrets.DB_PORT }},DB_NAME=${{ secrets.DB_NAME }},DEPLOY=PROD,GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }},STRIPE_KEY=${{ secrets.STRIPE_KEY }},GIN_MODE=release,BaseOn=Production,FIREBASE_PROJECT_ID=${{ secret.FIREBASE_PROJECT_ID }},AES_KEY=${{ secret.AES_KEY }},AES_VI=${{ secret.AES_VI }} \
+        --set-env-vars DB_USER=${{ secrets.DB_USER }},DB_PASSWORD=${{ secrets.DB_PASSWORD }},DB_HOST=${{ secrets.DB_HOST }},DB_PORT=${{ secrets.DB_PORT }},DB_NAME=${{ secrets.DB_NAME }},DEPLOY=PROD,GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }},STRIPE_KEY=${{ secrets.STRIPE_KEY }},GIN_MODE=release,BaseOn=Production,FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }},AES_KEY=${{ secrets.AES_KEY }},AES_VI=${{ secrets.AES_VI }} \
         --max-instances=10 \
         --memory 1Gi \
         --timeout=1m
