@@ -30,3 +30,6 @@ go.work
 tmp/
 
 main
+
+
+*credential*.json

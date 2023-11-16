@@ -6,6 +6,7 @@ type User struct {
 	Name        string
 	Email       string
 	ProfilePic  string
+	StripeId    string // for collecting a stripe customer id
 
 	Payment []Payment `gorm:"foreignKey:UserID"`
 	Coin    []Coin    `gorm:"foreignKey:UserID"`

@@ -4,8 +4,11 @@ package services
 import (
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/stripe/stripe-go/v76"
+	"github.com/stripe/stripe-go/v76/checkout/session"
+	"github.com/stripe/stripe-go/v76/customer"
 	"github.com/stripe/stripe-go/v76/paymentintent"
 )
 
@@ -23,21 +26,69 @@ func ConfirmPaymentIntent(paymentIntentID, paymentMethodID string) (bool, error)
 	// Check if the PaymentIntent is already succeeded
 	if pi.Status == stripe.PaymentIntentStatusSucceeded {
 		return true, nil
-	}
-
-	// Confirm the PaymentIntent if it is not succeeded
-	paramsConfirm := &stripe.PaymentIntentConfirmParams{
-		PaymentMethod: stripe.String(paymentMethodID),
-	}
-	pi, err = paymentintent.Confirm(paymentIntentID, paramsConfirm)
-	if err != nil {
-		return false, fmt.Errorf("error confirming payment intent: %v", err)
-	}
-
-	// Check the status of the PaymentIntent after confirmation
-	if pi.Status == stripe.PaymentIntentStatusSucceeded {
-		return true, nil
 	} else {
 		return false, fmt.Errorf("payment failed with status: %s", pi.Status)
 	}
+}
+
+func CreateCustomer(email string, name string, firebaseId string) (*stripe.Customer, error) {
+	// Set your Stripe secret API key
+	stripe.Key = os.Getenv("STRIPE_KEY")
+
+	// customer Params
+	params := &stripe.CustomerParams{
+		Email:       &email,
+		Name:        &name,
+		Description: stripe.String(firebaseId),
+	}
+
+	c, err := customer.New(params)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return c, nil
+
+}
+
+func CreateCheckoutSession(
+	prize string,
+	mode string,
+	paymentMethodType []string,
+	customerStripeId string,
+	originWeb string,
+	plan int,
+) (*stripe.CheckoutSession, error) {
+	// Set your Stripe secret API key
+	stripe.Key = os.Getenv("STRIPE_KEY")
+
+	// encrypt a plan code
+	ciperPlan, err := GetAESEncrypted(strconv.Itoa(plan))
+	if err != nil {
+		return nil, err
+	}
+
+	params := &stripe.CheckoutSessionParams{
+		LineItems: []*stripe.CheckoutSessionLineItemParams{
+			{
+				Price:    stripe.String(prize),
+				Quantity: stripe.Int64(1),
+			},
+		},
+		Mode: stripe.String(mode),
+		PaymentMethodTypes: stripe.StringSlice(
+			paymentMethodType,
+		),
+		Customer:   &customerStripeId,
+		SuccessURL: stripe.String(fmt.Sprintf("%s/subscription/success?session_id={CHECKOUT_SESSION_ID}&plan=%s", originWeb, ciperPlan)),
+		CancelURL:  stripe.String(fmt.Sprintf("%s/cancel?cancle={cancle}", originWeb)),
+	}
+
+	s, err := session.New(params)
+	if err != nil {
+		return nil, err
+	}
+
+	return s, nil
 }

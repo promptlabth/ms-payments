@@ -43,3 +43,9 @@ type PaymentSubscriptionRequest struct {
 	PlanID *uint `valid:"-"`
 	Plan   Plan  `gorm:"references:Id" valid:"-"`
 }
+
+type SubscriptionReqUrl struct {
+	PrizeID string
+	WebUrl  string
+	PlanID  int
+}
