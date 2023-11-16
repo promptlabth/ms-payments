@@ -59,6 +59,7 @@ func main() {
 		&entities.Feature{},
 		&entities.User{},
 		&entities.PaymentSubscription{},
+		&entities.Plan{},
 	)
 	// database.DB.AutoMigrate()
 	if os.Getenv("BaseOn") != "DEV" {
