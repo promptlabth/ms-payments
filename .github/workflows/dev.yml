@@ -3,7 +3,7 @@ name: Build and Deploy to Cloud Run For Dev
 on:
   push:
     branches:
-      - dev
+      - ms-payment/dev
 
 jobs:
   build-and-deploy:
