@@ -34,13 +34,13 @@ func TestSubscriptionPaymentProcess(t *testing.T) {
 	}{
 		{
 			name:    "success",
-			input:   entities.PaymentSubscription{PaymentIntentId: "stripe_id"},
+			input:   entities.PaymentSubscription{SubscriptionID: "stripe_id"},
 			wantErr: false,
 		},
 		{
 			name:                "repository error",
 			repoShouldReturnErr: true,
-			input:               entities.PaymentSubscription{PaymentIntentId: "stripe_id"},
+			input:               entities.PaymentSubscription{SubscriptionID: "stripe_id"},
 			wantErr:             true,
 		},
 		{

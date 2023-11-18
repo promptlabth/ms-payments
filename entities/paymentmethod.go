@@ -5,7 +5,7 @@ type PaymentMethod struct {
 	Type string
 
 	Payments             []Payment             `gorm:"foreignKey:PaymentMethodID"`
-	PaymentSubscriptions []PaymentSubscription `gorm:"foreignKey:UserID"`
+	PaymentSubscriptions []PaymentSubscription `gorm:"foreignKey:PaymentMethodID"`
 }
 
 func (b *PaymentMethod) TableName() string {

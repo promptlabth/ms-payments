@@ -32,7 +32,7 @@ func TestStoreSubscription(t *testing.T) {
 				UserID:          uintPtr(1),
 				PaymentMethodID: uintPtr(2),
 				Plan:            plan,
-				PaymentIntentId: "tx_123",
+				SubscriptionID:  "tx_123",
 			},
 			setup: func(mock sqlmock.Sqlmock) {
 				mock.ExpectExec(`INSERT INTO payments`).
@@ -47,7 +47,7 @@ func TestStoreSubscription(t *testing.T) {
 				UserID:          uintPtr(1),
 				PaymentMethodID: uintPtr(2),
 				Plan:            plan,
-				PaymentIntentId: "tx_123",
+				SubscriptionID:  "tx_123",
 			},
 			setup: func(mock sqlmock.Sqlmock) {
 				mock.ExpectExec(`INSERT INTO payments`).
