@@ -3,7 +3,7 @@ name: Build and Deploy to Cloud Run For Dev webhook test
 on:
   push:
     branches:
-      - ms-payment/dev
+      - dev/webhook-resume-sub
 
 jobs:
   build-and-deploy:
