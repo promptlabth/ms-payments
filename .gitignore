@@ -30,6 +30,7 @@ go.work
 tmp/
 
 main
+*.DS_Store
 
 
 *credential*.json
