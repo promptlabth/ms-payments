@@ -4,7 +4,7 @@ import "github.com/promptlabth/ms-payments/entities"
 
 type PaymentSubscriptionUseCase interface {
 	ProcessSubscriptionPayments(payment entities.PaymentSubscription) error
-	GetSubscriptionPaymentByPaymentIntentId(payment *entities.PaymentSubscription, paymentIntentId string) error
+	GetSubscriptionPaymentBySubscriptionID(payment *entities.PaymentSubscription, subscriptionID string) error
 }
 
 type PaymentSubscriptionRepository interface {

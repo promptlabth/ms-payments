@@ -11,14 +11,20 @@ import (
 )
 
 type SubscriptionReqUrlController struct {
-	userUsecase interfaces.UserUseCase
+	userUsecase                interfaces.UserUseCase
+	planUsecase                interfaces.PlanUsecase
+	paymentSubscriptionUsecase interfaces.PaymentSubscriptionUseCase
 }
 
 func NewSubscriptionReqUrlController(
 	userusecase interfaces.UserUseCase,
+	planUsecase interfaces.PlanUsecase,
+	paymentSubscriptionUsecase interfaces.PaymentSubscriptionUseCase,
 ) *SubscriptionReqUrlController {
 	return &SubscriptionReqUrlController{
-		userUsecase: userusecase,
+		userUsecase:                userusecase,
+		planUsecase:                planUsecase,
+		paymentSubscriptionUsecase: paymentSubscriptionUsecase,
 	}
 }
 func (t *SubscriptionReqUrlController) GetSubscriptionUrl(c *gin.Context) {
@@ -89,6 +95,103 @@ func (t *SubscriptionReqUrlController) GetSubscriptionUrl(c *gin.Context) {
 	// if everything is successful will send a url to checkout to frontend
 	c.JSON(201, gin.H{
 		"url": checkoutSession.URL,
+	})
+
+}
+
+// for save a data subscription to payment subscription
+func (t *SubscriptionReqUrlController) SaveSubscription(c *gin.Context) {
+	// get a firebase id from middleware
+	firebaseId := c.GetString("firebase_id")
+
+	// binding a requset from user
+	var subscriptionReq entities.SaveSubscriptionReq
+	if err := c.ShouldBindJSON(&subscriptionReq); err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	// find a checkout data from checkout session id
+	session, err := services.CheckCheckoutSessionId(subscriptionReq.CheckoutSessionId)
+
+	// if found a error in check session id
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	// check a status is complete?
+	if session.Status != "complete" {
+		c.JSON(400, gin.H{
+			"error": "คุณยังจ่ายเงินไม่สำเร็จ",
+		})
+		return
+	}
+
+	// check a session is success?
+	if session.PaymentStatus != "paid" {
+		c.JSON(400, gin.H{
+			"error": "คุณยังไม่ได้จ่ายเงินให้กับเรา",
+		})
+		return
+	}
+
+	// find a payment subscription haved?
+	var oldPayment entities.PaymentSubscription
+	if err := t.paymentSubscriptionUsecase.GetSubscriptionPaymentBySubscriptionID(&oldPayment, session.Subscription.ID); err == nil {
+		c.JSON(400, gin.H{
+			"error": "คุณเคยใช้ ID นี้จ่ายเงินแล้ว หากไม่ได้สิทธิ์กรุณาติดต่อแอดมิน",
+		})
+		return
+	}
+
+	// find a user by firebase id
+	var user entities.User
+	if err := t.userUsecase.GetAUserByFirebaseId(&user, firebaseId); err != nil {
+		c.JSON(400, gin.H{
+			"error": "ไม่พบข้อมูล User รายนี้",
+		})
+		return
+	}
+
+	// find a price by subscription id from stripe
+	subscriptionItem, _ := services.GetPriceBySubscriptionID(session.Subscription.ID)
+
+	// find a plan by price id
+	var plan entities.Plan
+	if err := t.planUsecase.GetAPlanByPriceID(&plan, subscriptionItem.Plan.ID); err != nil {
+		c.JSON(400, gin.H{
+			"error": "ไม่พบข้อมูล plan นี้",
+		})
+		return
+	}
+
+	// add a subscription id to payment subscriptions
+	userId := uint(user.Id)
+	planId := uint(plan.Id)
+	ps := entities.PaymentSubscription{
+		SubscriptionID:  session.Subscription.ID,
+		UserID:          &userId,
+		PlanID:          &planId,
+		PaymentMethodID: nil,
+	}
+	if err := t.paymentSubscriptionUsecase.ProcessSubscriptionPayments(ps); err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(201, gin.H{
+		"data":             session,
+		"user":             user,
+		"plan":             plan,
+		"session":          session,
+		"subscriptionItem": subscriptionItem.Plan,
 	})
 
 }

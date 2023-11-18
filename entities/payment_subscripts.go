@@ -4,8 +4,8 @@ package entities
 import "time"
 
 type PaymentSubscription struct {
-	Id                 int `gorm:"primaryKey;autoIncrement:true"`
-	PaymentIntentId    string
+	Id                 int    `gorm:"primaryKey;autoIncrement:true"`
+	SubscriptionID     string `gorm:"uniqueIndex:idx_payment_subscription_subscription_id"`
 	Datetime           time.Time
 	StartDatetime      time.Time
 	EndDatetime        time.Time
@@ -29,7 +29,7 @@ func (b *PaymentSubscription) TableName() string {
 }
 
 type PaymentSubscriptionRequest struct {
-	PaymentIntentId string
+	SubscriptionID string
 
 	// user
 	UserID *uint `valid:"-"`
@@ -48,4 +48,9 @@ type SubscriptionReqUrl struct {
 	PrizeID string
 	WebUrl  string
 	PlanID  int
+}
+
+type SaveSubscriptionReq struct {
+	CheckoutSessionId string
+	Plan              string
 }

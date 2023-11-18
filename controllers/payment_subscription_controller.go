@@ -40,7 +40,7 @@ func (p *PaymentSubscriptionController) CreatePaymentSubscription(c *gin.Context
 	paymentMethodIDStr := strconv.FormatUint(uint64(*paymentSubscription.PaymentMethodID), 10)
 
 	// Confirm the payment intent
-	success, err := services.ConfirmPaymentIntent(paymentSubscriptionRequest.PaymentIntentId, paymentMethodIDStr)
+	success, err := services.ConfirmPaymentIntent(paymentSubscriptionRequest.SubscriptionID, paymentMethodIDStr)
 	if err != nil {
 		// Log the error for debugging
 		fmt.Println("Error confirming payment intent:", err)
@@ -61,7 +61,7 @@ func (p *PaymentSubscriptionController) CreatePaymentSubscription(c *gin.Context
 
 	// validate a PaymentIntentId (find a payment Intent ID)
 	var payment entities.PaymentSubscription
-	if err := p.paymentSubscriptionUsecase.GetSubscriptionPaymentByPaymentIntentId(&payment, paymentSubscriptionRequest.PaymentIntentId); err == nil {
+	if err := p.paymentSubscriptionUsecase.GetSubscriptionPaymentBySubscriptionID(&payment, paymentSubscriptionRequest.SubscriptionID); err == nil {
 		fmt.Println("Error processing subscription payments:", err)
 
 		// Respond with a 400 Bad Request status code
@@ -96,7 +96,7 @@ func (r *PaymentSubscriptionRequestWrapper) ToPaymentSubscription() entities.Pay
 	now := time.Now()
 	paymentMethodID := uint(1)
 	return entities.PaymentSubscription{
-		PaymentIntentId:    r.PaymentIntentId,
+		SubscriptionID:     r.SubscriptionID,
 		Datetime:           now,
 		StartDatetime:      now,
 		EndDatetime:        now.Add(30 * 24 * time.Hour), // For example, 30 days later

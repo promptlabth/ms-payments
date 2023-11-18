@@ -18,7 +18,7 @@ func (m *mockPaymentSubscriptionUsecase) ProcessSubscriptionPayments(payment ent
 	return nil
 }
 
-func (m *mockPaymentSubscriptionUsecase) GetSubscriptionPaymentByPaymentIntentId(payment *entities.PaymentSubscription, paymentIntentId string) error {
+func (m *mockPaymentSubscriptionUsecase) GetSubscriptionPaymentBySubscriptionID(payment *entities.PaymentSubscription, paymentIntentId string) error {
 	return nil
 }
 

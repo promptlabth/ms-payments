@@ -19,8 +19,8 @@ func (t *PaymentSubscriptionsRepository) Store(payment entities.PaymentSubscript
 	now := time.Now()
 	oneMonthLater := now.AddDate(0, 1, 0)
 	newPayment := entities.PaymentSubscription{
-		PaymentIntentId:    payment.PaymentIntentId,
-		PaymentMethod:      payment.PaymentMethod,
+		SubscriptionID:     payment.SubscriptionID,
+		PaymentMethodID:    payment.PaymentMethodID,
 		StartDatetime:      now,
 		EndDatetime:        oneMonthLater,
 		PlanID:             payment.PlanID,
@@ -34,8 +34,8 @@ func (t *PaymentSubscriptionsRepository) Store(payment entities.PaymentSubscript
 	return nil
 }
 
-func (t *PaymentSubscriptionsRepository) Get(payment *entities.PaymentSubscription, paymentIntentId string) error {
-	if err := t.conn.Raw("SELECT * FROM subscriptions_payments WHERE payment_intent_id = ?", paymentIntentId).Find(&payment).Error; err != nil {
+func (t *PaymentSubscriptionsRepository) Get(payment *entities.PaymentSubscription, subscriptionID string) error {
+	if err := t.conn.Where("subscription_id = ?", subscriptionID).First(&payment).Error; err != nil {
 		return err
 	}
 	return nil

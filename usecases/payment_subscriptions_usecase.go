@@ -15,7 +15,7 @@ type paymentSubscriptionImpl struct {
 }
 
 func (u *paymentSubscriptionImpl) ProcessSubscriptionPayments(subscriptions_payment entities.PaymentSubscription) error {
-	if subscriptions_payment.PaymentIntentId == "" {
+	if subscriptions_payment.SubscriptionID == "" {
 		return errors.New("missing Stripe ID")
 	}
 
@@ -25,8 +25,8 @@ func (u *paymentSubscriptionImpl) ProcessSubscriptionPayments(subscriptions_paym
 	return u.Repository.Store(subscriptions_payment)
 }
 
-func (u *paymentSubscriptionImpl) GetSubscriptionPaymentByPaymentIntentId(payment *entities.PaymentSubscription, paymentIntentId string) (err error) {
-	handleErr := u.Repository.Get(payment, paymentIntentId)
+func (u *paymentSubscriptionImpl) GetSubscriptionPaymentBySubscriptionID(payment *entities.PaymentSubscription, subscriptionID string) (err error) {
+	handleErr := u.Repository.Get(payment, subscriptionID)
 	return handleErr
 }
 

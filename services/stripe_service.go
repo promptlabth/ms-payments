@@ -10,6 +10,7 @@ import (
 	"github.com/stripe/stripe-go/v76/checkout/session"
 	"github.com/stripe/stripe-go/v76/customer"
 	"github.com/stripe/stripe-go/v76/paymentintent"
+	"github.com/stripe/stripe-go/v76/subscription"
 )
 
 func ConfirmPaymentIntent(paymentIntentID, paymentMethodID string) (bool, error) {
@@ -91,4 +92,32 @@ func CreateCheckoutSession(
 	}
 
 	return s, nil
+}
+
+func CheckCheckoutSessionId(sessionId string) (*stripe.CheckoutSession, error) {
+	// Set your Stripe secret API key
+	stripe.Key = os.Getenv("STRIPE_KEY")
+
+	s, err := session.Get(
+		sessionId, nil,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return s, nil
+
+}
+
+func GetPriceBySubscriptionID(subscriptionID string) (*stripe.SubscriptionItem, error) {
+	// Set your Stripe secret API key
+	stripe.Key = os.Getenv("STRIPE_KEY")
+
+	s, err := subscription.Get(
+		subscriptionID,
+		nil,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return s.Items.Data[0], nil
 }
