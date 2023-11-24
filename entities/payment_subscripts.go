@@ -52,5 +52,4 @@ type SubscriptionReqUrl struct {
 
 type SaveSubscriptionReq struct {
 	CheckoutSessionId string
-	Plan              string
 }

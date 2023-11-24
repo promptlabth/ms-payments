@@ -173,20 +173,20 @@ func (t *SubscriptionReqUrlController) SaveSubscription(c *gin.Context) {
 	}
 
 	// add a subscription id to payment subscriptions
-	userId := uint(user.Id)
-	planId := uint(plan.Id)
-	ps := entities.PaymentSubscription{
-		SubscriptionID:  session.Subscription.ID,
-		UserID:          &userId,
-		PlanID:          &planId,
-		PaymentMethodID: nil,
-	}
-	if err := t.paymentSubscriptionUsecase.ProcessSubscriptionPayments(&ps); err != nil {
-		c.JSON(400, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
+	// userId := uint(user.Id)
+	// planId := uint(plan.Id)
+	// ps := entities.PaymentSubscription{
+	// 	SubscriptionID:  session.Subscription.ID,
+	// 	UserID:          &userId,
+	// 	PlanID:          &planId,
+	// 	PaymentMethodID: nil,
+	// }
+	// if err := t.paymentSubscriptionUsecase.ProcessSubscriptionPayments(&ps); err != nil {
+	// 	c.JSON(400, gin.H{
+	// 		"error": err.Error(),
+	// 	})
+	// 	return
+	// }
 
 	c.JSON(201, gin.H{
 		"data":             session,
