@@ -76,7 +76,7 @@ func TestStoreSubscription(t *testing.T) {
 			}
 
 			// Call the method under test
-			err = repo.Store(tt.payment)
+			err = repo.Store(&tt.payment)
 
 			// Check the results
 			assert.Equal(t, tt.wantErr, err != nil)

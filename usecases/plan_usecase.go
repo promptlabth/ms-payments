@@ -29,6 +29,13 @@ func (t *planUsecase) GetAPlanByPriceID(plan *entities.Plan, id string) error {
 	return nil
 }
 
+func (t *planUsecase) GetAPlanByProdID(plan *entities.Plan, id string) error {
+	if err := t.planRepo.GetAPlanByProdID(plan, id); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (t *planUsecase) CreateAPlan(plan *entities.Plan) error {
 	if err := t.planRepo.CreateAPlan(plan); err != nil {
 		return err

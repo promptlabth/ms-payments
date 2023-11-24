@@ -14,7 +14,7 @@ type paymentSubscriptionImpl struct {
 	Repository interfaces.PaymentSubscriptionRepository
 }
 
-func (u *paymentSubscriptionImpl) ProcessSubscriptionPayments(subscriptions_payment entities.PaymentSubscription) error {
+func (u *paymentSubscriptionImpl) ProcessSubscriptionPayments(subscriptions_payment *entities.PaymentSubscription) error {
 	if subscriptions_payment.SubscriptionID == "" {
 		return errors.New("missing Stripe ID")
 	}
@@ -28,6 +28,13 @@ func (u *paymentSubscriptionImpl) ProcessSubscriptionPayments(subscriptions_paym
 func (u *paymentSubscriptionImpl) GetSubscriptionPaymentBySubscriptionID(payment *entities.PaymentSubscription, subscriptionID string) (err error) {
 	handleErr := u.Repository.Get(payment, subscriptionID)
 	return handleErr
+}
+
+func (u *paymentSubscriptionImpl) UpdateSubscriptionPayment(payment *entities.PaymentSubscription) error {
+	if err := u.Repository.UpdateSubscriptionPayment(payment); err != nil {
+		return err
+	}
+	return nil
 }
 
 func NewPaymentSubscriptionUsecase(repo interfaces.PaymentSubscriptionRepository) interfaces.PaymentSubscriptionUseCase {
