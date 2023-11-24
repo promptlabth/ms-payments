@@ -126,31 +126,6 @@ func (t *SubscriptionReqUrlController) SaveSubscription(c *gin.Context) {
 		return
 	}
 
-	// check a status is complete?
-	if session.Status != "complete" {
-		c.JSON(400, gin.H{
-			"error": "คุณยังจ่ายเงินไม่สำเร็จ",
-		})
-		return
-	}
-
-	// check a session is success?
-	if session.PaymentStatus != "paid" {
-		c.JSON(400, gin.H{
-			"error": "คุณยังไม่ได้จ่ายเงินให้กับเรา",
-		})
-		return
-	}
-
-	// find a payment subscription haved?
-	var oldPayment entities.PaymentSubscription
-	if err := t.paymentSubscriptionUsecase.GetSubscriptionPaymentBySubscriptionID(&oldPayment, session.Subscription.ID); err == nil {
-		c.JSON(400, gin.H{
-			"error": "คุณเคยใช้ ID นี้จ่ายเงินแล้ว หากไม่ได้สิทธิ์กรุณาติดต่อแอดมิน",
-		})
-		return
-	}
-
 	// find a user by firebase id
 	var user entities.User
 	if err := t.userUsecase.GetAUserByFirebaseId(&user, firebaseId); err != nil {
