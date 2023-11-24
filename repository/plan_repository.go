@@ -30,6 +30,13 @@ func (t *planRepository) GetAPlanByPriceID(plan *entities.Plan, id string) error
 	return nil
 }
 
+func (t *planRepository) GetAPlanByProdID(plan *entities.Plan, id string) error {
+	if err := t.conn.Where("product_id = ?", id).First(plan).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (t *planRepository) CreateAPlan(plan *entities.Plan) error {
 	if err := t.conn.Create(plan).Error; err != nil {
 		return err

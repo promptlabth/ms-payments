@@ -94,6 +94,8 @@ func main() {
 
 	routes.SubscriptionRoute(r, database.DB)
 
+	routes.WebhookRoute(r, database.DB)
+
 	r.POST("/payment", controller.CreatePayment)
 
 	port := os.Getenv("PORT")

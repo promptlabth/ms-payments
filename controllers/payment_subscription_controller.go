@@ -73,7 +73,7 @@ func (p *PaymentSubscriptionController) CreatePaymentSubscription(c *gin.Context
 	fmt.Println("Payment was successful!")
 
 	// Process the subscription payments
-	if err := p.paymentSubscriptionUsecase.ProcessSubscriptionPayments(paymentSubscription); err != nil {
+	if err := p.paymentSubscriptionUsecase.ProcessSubscriptionPayments(&paymentSubscription); err != nil {
 		// Log the error for debugging
 		fmt.Println("Error processing subscription payments:", err)
 

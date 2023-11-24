@@ -36,3 +36,10 @@ func (t *userUseCase) UpdateAUser(user *entities.User, id string) (err error) {
 	}
 	return nil
 }
+
+func (t *userUseCase) GetAUserByStripeID(user *entities.User, stripeID string) error {
+	if err := t.userRepo.GetAUserByStripeID(user, stripeID); err != nil {
+		return err
+	}
+	return nil
+}

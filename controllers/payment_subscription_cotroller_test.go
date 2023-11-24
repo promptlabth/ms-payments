@@ -14,11 +14,15 @@ import (
 
 type mockPaymentSubscriptionUsecase struct{}
 
-func (m *mockPaymentSubscriptionUsecase) ProcessSubscriptionPayments(payment entities.PaymentSubscription) error {
+func (m *mockPaymentSubscriptionUsecase) ProcessSubscriptionPayments(payment *entities.PaymentSubscription) error {
 	return nil
 }
 
 func (m *mockPaymentSubscriptionUsecase) GetSubscriptionPaymentBySubscriptionID(payment *entities.PaymentSubscription, paymentIntentId string) error {
+	return nil
+}
+
+func (m *mockPaymentSubscriptionUsecase) UpdateSubscriptionPayment(payment *entities.PaymentSubscription) error {
 	return nil
 }
 

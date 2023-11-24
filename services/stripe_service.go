@@ -9,6 +9,7 @@ import (
 	"github.com/stripe/stripe-go/v76"
 	"github.com/stripe/stripe-go/v76/checkout/session"
 	"github.com/stripe/stripe-go/v76/customer"
+	"github.com/stripe/stripe-go/v76/invoice"
 	"github.com/stripe/stripe-go/v76/paymentintent"
 	"github.com/stripe/stripe-go/v76/subscription"
 )
@@ -120,4 +121,43 @@ func GetPriceBySubscriptionID(subscriptionID string) (*stripe.SubscriptionItem, 
 		return nil, err
 	}
 	return s.Items.Data[0], nil
+}
+
+func CancelSubscriptionBySubID(subscriptionID string) (*stripe.Subscription, error) {
+	// Set your Stripe secret API key
+	stripe.Key = os.Getenv("STRIPE_KEY")
+	s, _ := subscription.Cancel(
+		subscriptionID,
+		nil,
+	)
+	return s, nil
+}
+
+func ListSubscriptionByCustomerID(customerID string) (*[]stripe.Subscription, error) {
+	// Set your Stripe secret API key
+	stripe.Key = os.Getenv("STRIPE_KEY")
+	params := &stripe.SubscriptionListParams{
+		Customer: &customerID,
+	}
+	i := subscription.List(params)
+	var subscriptionList []stripe.Subscription
+	for i.Next() {
+		subscriptionList = append(subscriptionList, *i.Subscription())
+	}
+	return &subscriptionList, nil
+}
+
+func ListInvoicesByCustomerID(customerID string) (*[]stripe.Invoice, error) {
+	// Set your Stripe secret API key
+	stripe.Key = os.Getenv("STRIPE_KEY")
+	params := &stripe.InvoiceListParams{
+		Customer: &customerID,
+	}
+	i := invoice.List(params)
+
+	var invoices []stripe.Invoice
+	for i.Next() {
+		invoices = append(invoices, *i.Invoice())
+	}
+	return &invoices, nil
 }

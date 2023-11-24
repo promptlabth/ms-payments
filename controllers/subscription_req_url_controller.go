@@ -75,6 +75,8 @@ func (t *SubscriptionReqUrlController) GetSubscriptionUrl(c *gin.Context) {
 		}
 	}
 
+	// check a customer is have a subscription? (when user click a same plan [other plan mean upgrade])
+
 	// to create a cehckout url from stripe (make subscription url to customer)
 	checkoutSession, err := services.CreateCheckoutSession(
 		subscriptionReqUrl.PrizeID,
@@ -179,7 +181,7 @@ func (t *SubscriptionReqUrlController) SaveSubscription(c *gin.Context) {
 		PlanID:          &planId,
 		PaymentMethodID: nil,
 	}
-	if err := t.paymentSubscriptionUsecase.ProcessSubscriptionPayments(ps); err != nil {
+	if err := t.paymentSubscriptionUsecase.ProcessSubscriptionPayments(&ps); err != nil {
 		c.JSON(400, gin.H{
 			"error": err.Error(),
 		})

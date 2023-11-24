@@ -6,6 +6,7 @@ type Plan struct {
 	PlanType    string `gorm:"column:planType"`
 	MaxMessages int    `gorm:"column:maxMessages"`
 	PriceID     string `gorm:"uniqueIndex:idx_plan_price_id"`
+	ProductID   string `gorm:"uniqueIndex:idx_plan_product_id"`
 
 	PaymentSubscriptions []PaymentSubscription `gorm:"foreignKey:PlanID"`
 }
