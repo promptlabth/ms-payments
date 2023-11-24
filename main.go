@@ -90,7 +90,6 @@ func main() {
 	controller := controllers.PaymentController{Usecase: usecase}
 
 	routes.CoinRoute(r, database.DB)
-	routes.PaymentSubscriptionRoute(r, database.DB)
 
 	routes.SubscriptionRoute(r, database.DB)
 
