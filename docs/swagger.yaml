@@ -1,0 +1,18 @@
+basePath: /api
+host: localhost:8080
+info:
+  contact: {}
+  description: A Tag service API in Go using Gin framework
+  title: Tag Service API
+  version: "1.0"
+paths:
+  /coin:
+    post:
+      description: Save tags data in Db.
+      produces:
+      - application/json
+      responses: {}
+      summary: Create tags
+      tags:
+      - Coins
+swagger: "2.0"

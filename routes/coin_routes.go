@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
+
 func CoinRoute(r *gin.Engine, DB *gorm.DB) {
 	coinRepo := repository.NewCoinRepository(DB)
 	coinUseCase := usecases.NewCoinUseCase(coinRepo)
