@@ -15,6 +15,10 @@ import (
 	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	_ "github.com/promptlabth/ms-payments/docs"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func CORSMiddleware() gin.HandlerFunc {
@@ -42,6 +46,12 @@ func CORSMiddleware() gin.HandlerFunc {
 
 var err error
 
+// @title 	Tag Service API
+// @version	1.0
+// @description A Tag service API in Go using Gin framework
+
+// @host 	localhost:8080
+// @BasePath /api
 func main() {
 	database.DB, err = gorm.Open(postgres.Open(
 		database.DbURL(database.BuildDBConfig()),
@@ -66,6 +76,8 @@ func main() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.Default()
+	// add swagger
+	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	// to set CORS
 	r.Use(CORSMiddleware())
 

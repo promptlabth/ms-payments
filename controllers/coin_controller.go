@@ -37,6 +37,11 @@ func (t *CoinController) GetACoin(c *gin.Context) {
 	}
 }
 
+// CreateTags		godoc
+// @Description		Save tags data in Db.
+// @Produce			application/json
+// @Tags			Coins
+// @Router			/coin [post]
 func (t *CoinController) CreateACoin(c *gin.Context) {
 	var newCoin entities.Coin
 	if err := c.ShouldBindJSON(&newCoin); err != nil {
