@@ -11,7 +11,7 @@ type MockPaymentSubscriptionsRepository struct {
 	ShouldReturnError bool
 }
 
-func (m *MockPaymentSubscriptionsRepository) Store(payment_subscriptions entities.PaymentSubscription) error {
+func (m *MockPaymentSubscriptionsRepository) Store(payment_subscriptions *entities.PaymentSubscription) error {
 	if m.ShouldReturnError {
 		return errors.New("repository error")
 	}
@@ -19,6 +19,13 @@ func (m *MockPaymentSubscriptionsRepository) Store(payment_subscriptions entitie
 }
 
 func (m *MockPaymentSubscriptionsRepository) Get(payment *entities.PaymentSubscription, paymentIntentId string) error {
+	if m.ShouldReturnError {
+		return errors.New("repository error")
+	}
+	return nil // Simulate success
+}
+
+func (m *MockPaymentSubscriptionsRepository) UpdateSubscriptionPayment(payment_subscriptions *entities.PaymentSubscription) error {
 	if m.ShouldReturnError {
 		return errors.New("repository error")
 	}
@@ -34,13 +41,13 @@ func TestSubscriptionPaymentProcess(t *testing.T) {
 	}{
 		{
 			name:    "success",
-			input:   entities.PaymentSubscription{PaymentIntentId: "stripe_id"},
+			input:   entities.PaymentSubscription{SubscriptionID: "stripe_id"},
 			wantErr: false,
 		},
 		{
 			name:                "repository error",
 			repoShouldReturnErr: true,
-			input:               entities.PaymentSubscription{PaymentIntentId: "stripe_id"},
+			input:               entities.PaymentSubscription{SubscriptionID: "stripe_id"},
 			wantErr:             true,
 		},
 		{
@@ -55,7 +62,7 @@ func TestSubscriptionPaymentProcess(t *testing.T) {
 			repo := &MockPaymentSubscriptionsRepository{ShouldReturnError: tt.repoShouldReturnErr}
 			usecase := NewPaymentSubscriptionUsecase(repo)
 
-			err := usecase.ProcessSubscriptionPayments(tt.input)
+			err := usecase.ProcessSubscriptionPayments(&tt.input)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("SubscriptionPaymentProcess() error = %v, wantErr %v", err, tt.wantErr)
 			}
