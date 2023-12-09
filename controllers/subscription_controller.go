@@ -32,6 +32,58 @@ type SubscriptionReqUrl struct {
 	PlanID  int
 }
 
+func (t *SubscriptionReqUrlController) ListSubscriptionByCustomerID(c *gin.Context) {
+	firebaseUID := c.GetString("firebase_id")
+
+	var user entities.User
+	// get a user by firebase id
+	if err := t.userUsecase.GetAUserByFirebaseId(&user, firebaseUID); err != nil {
+		// if not found a user from firebase id
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if user.StripeId == "" {
+		// if not found a stripe id will be create a customer stripe id to this user and update it
+
+		// create a customer in stripe
+		cus, err := services.CreateCustomer(user.Email, user.Name, user.Firebase_id)
+		if err != nil {
+			c.JSON(400, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		// update a user in stripe
+		user.StripeId = cus.ID
+		if err := t.userUsecase.UpdateAUser(&user, strconv.Itoa(user.Id)); err != nil {
+			if err != nil {
+				c.JSON(403, gin.H{
+					"error": err.Error(),
+				})
+				return
+			}
+		}
+	}
+
+	subscriptionsAddress, err := services.ListSubscriptionByCustomerID(user.StripeId)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "ไม่พบข้อมูล subscription",
+		})
+		return
+	}
+	subscriptions := *subscriptionsAddress
+	c.JSON(
+		200, gin.H{
+			"data": subscriptions[0].ID,
+		},
+	)
+}
+
 func (t *SubscriptionReqUrlController) GetSubscriptionUrl(c *gin.Context) {
 
 	// checkout session to stripe service

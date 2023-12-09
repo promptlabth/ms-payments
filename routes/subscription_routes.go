@@ -30,6 +30,8 @@ func SubscriptionRoute(r *gin.Engine, DB *gorm.DB) {
 
 	protect.POST("/get-url", subscriptionReqUrlController.GetSubscriptionUrl)
 
+	protect.GET("/get-subscription", subscriptionReqUrlController.ListSubscriptionByCustomerID)
+
 	protect.POST("/cancle", func(c *gin.Context) {
 		data, _ := services.CancelSubscriptionBySubID(
 			"sub_1OD9dUAom1IgIvKKHzZyTo22",
