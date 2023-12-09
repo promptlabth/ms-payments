@@ -85,6 +85,7 @@ func (t *SubscriptionReqUrlController) GetSubscriptionUrl(c *gin.Context) {
 		c.JSON(404, gin.H{
 			"error": "คุณไม่สามารถ subscription อีกครั้งได้",
 		})
+		return
 	}
 
 	// to create a cehckout url from stripe (make subscription url to customer)
