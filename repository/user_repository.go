@@ -24,14 +24,14 @@ func (t *userRepository) GetAUser(user *entities.User, id string) (err error) {
 }
 
 func (t *userRepository) GetAUserByFirebaseId(user *entities.User, firebaseId string) (err error) {
-	if err := t.conn.Where("firebase_id = ?", firebaseId).First(&user).Error; err != nil {
+	if err := t.conn.Where("firebase_id = ?", firebaseId).First(user).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
 func (t *userRepository) UpdateAUser(user *entities.User) (err error) {
-	if err := t.conn.Save(&user).Error; err != nil {
+	if err := t.conn.Save(user).Error; err != nil {
 		return err
 	}
 	return nil

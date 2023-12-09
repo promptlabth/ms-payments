@@ -3,7 +3,6 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/promptlabth/ms-payments/entities"
@@ -12,20 +11,17 @@ import (
 )
 
 type WebhookController struct {
-	userUsecase                interfaces.UserUseCase
-	planUsecase                interfaces.PlanUsecase
-	paymentSubscriptionUsecase interfaces.PaymentSubscriptionUseCase
+	userUsecase interfaces.UserUseCase
+	planUsecase interfaces.PlanUsecase
 }
 
 func NewWebhookController(
 	userUsecase interfaces.UserUseCase,
 	planUsecase interfaces.PlanUsecase,
-	paymentSubscriptionUsecase interfaces.PaymentSubscriptionUseCase,
 ) *WebhookController {
 	return &WebhookController{
-		userUsecase:                userUsecase,
-		planUsecase:                planUsecase,
-		paymentSubscriptionUsecase: paymentSubscriptionUsecase,
+		userUsecase: userUsecase,
+		planUsecase: planUsecase,
 	}
 }
 
@@ -46,7 +42,6 @@ func (t *WebhookController) CustromerSubscriptionUpdate(c *gin.Context, jsonData
 		return
 	}
 	customerID := paymentSubscription.Customer.ID
-	subscriptionID := paymentSubscription.ID
 	productID := paymentSubscription.Items.Data[0].Plan.Product.ID
 
 	var plan entities.Plan
@@ -65,29 +60,11 @@ func (t *WebhookController) CustromerSubscriptionUpdate(c *gin.Context, jsonData
 		return
 	}
 
-	// get a data subscription to save a update data
-	var prevSubscriptionPayment entities.PaymentSubscription
-	if err := t.paymentSubscriptionUsecase.GetSubscriptionPaymentBySubscriptionID(&prevSubscriptionPayment, subscriptionID); err != nil {
-		c.JSON(400, gin.H{
-			"err": err,
-		})
-		return
-	}
-
-	userId := uint(user.Id)
 	planId := uint(plan.Id)
-	subscriptionUpdate := entities.PaymentSubscription{
-		Id:                 prevSubscriptionPayment.Id,
-		SubscriptionID:     subscriptionID,
-		StartDatetime:      time.Unix(paymentSubscription.CurrentPeriodStart, 0),
-		EndDatetime:        time.Unix(paymentSubscription.CurrentPeriodEnd, 0),
-		Datetime:           time.Unix(paymentSubscription.CurrentPeriodStart, 0),
-		UserID:             &userId,
-		PlanID:             &planId,
-		SubscriptionStatus: string(paymentSubscription.Status),
-	}
 
-	if err := t.paymentSubscriptionUsecase.UpdateSubscriptionPayment(&subscriptionUpdate); err != nil {
+	user.PlanID = &planId
+
+	if err := t.userUsecase.UpdateAUser(&user, string(user.Id)); err != nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{
 			"err": err,
 		})
@@ -97,7 +74,7 @@ func (t *WebhookController) CustromerSubscriptionUpdate(c *gin.Context, jsonData
 	c.JSON(200, gin.H{
 		"start": paymentSubscription.CurrentPeriodStart,
 		"end":   paymentSubscription.CurrentPeriodEnd,
-		"data":  subscriptionUpdate,
+		"data":  user,
 		// "data":  paymentSubscription,
 	})
 
@@ -121,7 +98,6 @@ func (t *WebhookController) CreateCustomerSubscription(c *gin.Context, jsonData 
 		return
 	}
 	customerID := paymentSubscription.Customer.ID
-	subscriptionID := paymentSubscription.ID
 	productID := paymentSubscription.Items.Data[0].Plan.Product.ID
 
 	var plan entities.Plan
@@ -140,19 +116,10 @@ func (t *WebhookController) CreateCustomerSubscription(c *gin.Context, jsonData 
 		return
 	}
 
-	userId := uint(user.Id)
-	planId := uint(plan.Id)
-	subscriptionCreate := entities.PaymentSubscription{
-		SubscriptionID:     subscriptionID,
-		StartDatetime:      time.Unix(paymentSubscription.CurrentPeriodStart, 0),
-		EndDatetime:        time.Unix(paymentSubscription.CurrentPeriodEnd, 0),
-		Datetime:           time.Now(),
-		UserID:             &userId,
-		PlanID:             &planId,
-		SubscriptionStatus: string(paymentSubscription.Status),
-	}
+	newPlanUser := uint(plan.Id)
+	user.PlanID = &newPlanUser
 
-	if err := t.paymentSubscriptionUsecase.ProcessSubscriptionPayments(&subscriptionCreate); err != nil {
+	if err := t.userUsecase.UpdateAUser(&user, string(user.Id)); err != nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{
 			"err": err,
 		})
@@ -162,7 +129,7 @@ func (t *WebhookController) CreateCustomerSubscription(c *gin.Context, jsonData 
 	c.JSON(200, gin.H{
 		"start": paymentSubscription.CurrentPeriodStart,
 		"end":   paymentSubscription.CurrentPeriodEnd,
-		"data":  subscriptionCreate,
+		"data":  user,
 		// "data":  paymentSubscription,
 	})
 
