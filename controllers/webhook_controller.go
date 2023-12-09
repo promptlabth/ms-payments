@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/promptlabth/ms-payments/entities"
@@ -64,7 +65,7 @@ func (t *WebhookController) CustromerSubscriptionUpdate(c *gin.Context, jsonData
 
 	user.PlanID = &planId
 
-	if err := t.userUsecase.UpdateAUser(&user, string(user.Id)); err != nil {
+	if err := t.userUsecase.UpdateAUser(&user, strconv.Itoa(user.Id)); err != nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{
 			"err": err,
 		})
@@ -119,7 +120,7 @@ func (t *WebhookController) CreateCustomerSubscription(c *gin.Context, jsonData 
 	newPlanUser := uint(plan.Id)
 	user.PlanID = &newPlanUser
 
-	if err := t.userUsecase.UpdateAUser(&user, string(user.Id)); err != nil {
+	if err := t.userUsecase.UpdateAUser(&user, strconv.Itoa(user.Id)); err != nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{
 			"err": err,
 		})
