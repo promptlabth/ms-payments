@@ -60,7 +60,7 @@ func WebhookRoute(r *gin.Engine, DB *gorm.DB) {
 
 		case "customer.subscription.deleted":
 			// Handle subscription cancellation
-			fmt.Println("Subscription canceled!")
+			subscriptionController.DeleteSubscription(c, jsonData)
 			c.JSON(200, gin.H{
 				"Test": event,
 			})
