@@ -119,6 +119,7 @@ func (t *WebhookController) CreateCustomerSubscription(c *gin.Context, jsonData 
 
 	newPlanUser := uint(plan.Id)
 	user.PlanID = &newPlanUser
+	user.Plan = plan
 
 	if err := t.userUsecase.UpdateAUser(&user, strconv.Itoa(user.Id)); err != nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{
