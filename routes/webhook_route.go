@@ -20,28 +20,14 @@ type StripeData struct {
 func WebhookRoute(r *gin.Engine, DB *gorm.DB) {
 	userRepo := repository.NewUserRepository(DB)
 	planRepo := repository.NewPlanRepository(DB)
-	paymentRepo := repository.NewPaymentScriptionRepository(DB)
 
 	userUsecase := usecases.NewUserUseCase(userRepo)
 	planUsecase := usecases.NewPlanUsecase(planRepo)
-	paymentSubscriptionUsecase := usecases.NewPaymentSubscriptionUsecase(
-		paymentRepo,
-	)
 
 	subscriptionController := controllers.NewWebhookController(
 		userUsecase,
 		planUsecase,
-		paymentSubscriptionUsecase,
 	)
-
-	// for testing (test get invoice ใบเสร็จ from customer id)
-	// r.GET("/testing", func(c *gin.Context) {
-	// 	listInvoice, _ := services.ListInvoicesByCustomerID("cus_P15cCCU7eDn6c4")
-	// 	c.JSON(200, gin.H{
-	// 		"data":  listInvoice,
-	// 		"count": len(*listInvoice),
-	// 	})
-	// })
 
 	r.POST("/webhook", func(c *gin.Context) {
 

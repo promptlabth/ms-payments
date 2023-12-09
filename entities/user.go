@@ -8,10 +8,10 @@ type User struct {
 	Profilepic  string
 	StripeId    string `gorm:"uniqueIndex:idx_user_stripe_id"`
 
-	Payment []Payment `gorm:"foreignKey:UserID"`
-	Coin    []Coin    `gorm:"foreignKey:UserID"`
+	Coin []Coin `gorm:"foreignKey:UserID"`
 
-	PaymentSubscriptions []PaymentSubscription `gorm:"foreignKey:UserID"`
+	PlanID *uint `valid:"-"`
+	Plan   Plan  `gorm:"references:Id" valid:"-"`
 }
 
 func (b *User) TableName() string {
