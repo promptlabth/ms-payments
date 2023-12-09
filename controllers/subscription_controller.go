@@ -81,6 +81,11 @@ func (t *SubscriptionReqUrlController) GetSubscriptionUrl(c *gin.Context) {
 	}
 
 	// check a customer is have a subscription? (when user click a same plan [other plan mean upgrade])
+	if *user.PlanID != uint(4) {
+		c.JSON(404, gin.H{
+			"error": "คุณไม่สามารถ subscription อีกครั้งได้",
+		})
+	}
 
 	// to create a cehckout url from stripe (make subscription url to customer)
 	checkoutSession, err := services.CreateCheckoutSession(
