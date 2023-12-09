@@ -163,3 +163,33 @@ func (t *SubscriptionReqUrlController) GetSubscriptionUrl(c *gin.Context) {
 	})
 
 }
+
+// struct for cancel subscription (only subscription id)
+type CancelSubscriptionRequest struct {
+	SubscriptionID string
+}
+
+func (t *SubscriptionReqUrlController) CancelSubscription(c *gin.Context) {
+	var cancelSubscription CancelSubscriptionRequest
+	if err := c.ShouldBindJSON(&cancelSubscription); err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	// cancel subscription At period end
+	subscription, err := services.CancelAtPeriodBySubID(cancelSubscription.SubscriptionID)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	c.JSON(200,
+		gin.H{
+			"data": subscription,
+		})
+
+}

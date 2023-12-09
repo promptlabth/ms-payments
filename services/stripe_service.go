@@ -133,6 +133,16 @@ func CancelSubscriptionBySubID(subscriptionID string) (*stripe.Subscription, err
 	return s, nil
 }
 
+func CancelAtPeriodBySubID(subscriptionID string) (*stripe.Subscription, error) {
+	stripe.Key = os.Getenv("STRIPE_KEY")
+
+	params := &stripe.SubscriptionParams{
+		CancelAtPeriodEnd: stripe.Bool(true),
+	}
+	result, err := subscription.Update(subscriptionID, params)
+	return result, err
+}
+
 func ListSubscriptionByCustomerID(customerID string) (*[]stripe.Subscription, error) {
 	// Set your Stripe secret API key
 	stripe.Key = os.Getenv("STRIPE_KEY")

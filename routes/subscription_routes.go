@@ -5,7 +5,6 @@ import (
 	"github.com/promptlabth/ms-payments/controllers"
 	"github.com/promptlabth/ms-payments/middlewares"
 	"github.com/promptlabth/ms-payments/repository"
-	"github.com/promptlabth/ms-payments/services"
 	"github.com/promptlabth/ms-payments/usecases"
 	"gorm.io/gorm"
 )
@@ -19,7 +18,7 @@ func SubscriptionRoute(r *gin.Engine, DB *gorm.DB) {
 	planRepo := repository.NewPlanRepository(DB)
 	planUsecase := usecases.NewPlanUsecase(planRepo)
 
-	subscriptionReqUrlController := controllers.NewSubscriptionReqUrlController(
+	subscriptionController := controllers.NewSubscriptionReqUrlController(
 		userUseCases,
 		planUsecase,
 	)
@@ -28,16 +27,9 @@ func SubscriptionRoute(r *gin.Engine, DB *gorm.DB) {
 	subScription := r.Group("/subscription")
 	protect := subScription.Use(middlewares.AuthorizeFirebase())
 
-	protect.POST("/get-url", subscriptionReqUrlController.GetSubscriptionUrl)
+	protect.POST("/get-url", subscriptionController.GetSubscriptionUrl)
 
-	protect.GET("/get-subscription", subscriptionReqUrlController.ListSubscriptionByCustomerID)
+	protect.GET("/get-subscription", subscriptionController.ListSubscriptionByCustomerID)
 
-	protect.POST("/cancle", func(c *gin.Context) {
-		data, _ := services.CancelSubscriptionBySubID(
-			"sub_1OD9dUAom1IgIvKKHzZyTo22",
-		)
-		c.JSON(200, gin.H{
-			"data": data,
-		})
-	})
+	protect.POST("/cancle", subscriptionController.CancelSubscription)
 }
