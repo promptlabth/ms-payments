@@ -98,6 +98,13 @@ func (t *WebhookController) CreateCustomerSubscription(c *gin.Context, jsonData 
 		})
 		return
 	}
+
+	if paymentSubscription.Status != "active" {
+		c.JSON(400, gin.H{
+			"err": "การเริ่มต้นระบบไม่สามารถใช้งานได้",
+		})
+		return
+	}
 	customerID := paymentSubscription.Customer.ID
 	productID := paymentSubscription.Items.Data[0].Plan.Product.ID
 
@@ -154,6 +161,14 @@ func (t *WebhookController) DeleteSubscription(c *gin.Context, jsonData []byte) 
 		})
 		return
 	}
+
+	if paymentSubscription.Status != "active" {
+		c.JSON(400, gin.H{
+			"err": "การเริ่มต้นระบบไม่สามารถใช้งานได้",
+		})
+		return
+	}
+
 	customerID := paymentSubscription.Customer.ID
 
 	var plan entities.Plan
