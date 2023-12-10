@@ -42,6 +42,13 @@ func (t *WebhookController) CustromerSubscriptionUpdate(c *gin.Context, jsonData
 		})
 		return
 	}
+	if paymentSubscription.Status != "active" {
+		c.JSON(400, gin.H{
+			"err": "การเริ่มต้นระบบไม่สามารถใช้งานได้",
+		})
+		return
+	}
+
 	customerID := paymentSubscription.Customer.ID
 	productID := paymentSubscription.Items.Data[0].Plan.Product.ID
 
@@ -158,13 +165,6 @@ func (t *WebhookController) DeleteSubscription(c *gin.Context, jsonData []byte) 
 	if err := json.Unmarshal(event.Data.Raw, &paymentSubscription); err != nil {
 		c.JSON(400, gin.H{
 			"err": err,
-		})
-		return
-	}
-
-	if paymentSubscription.Status != "active" {
-		c.JSON(400, gin.H{
-			"err": "การเริ่มต้นระบบไม่สามารถใช้งานได้",
 		})
 		return
 	}
