@@ -4,17 +4,18 @@ import (
 	"log"
 	"os"
 
-	"github.com/promptlabth/ms-payments/controllers"
 	"github.com/promptlabth/ms-payments/database"
 	"github.com/promptlabth/ms-payments/entities"
-	"github.com/promptlabth/ms-payments/repository"
 	"github.com/promptlabth/ms-payments/routes"
-	"github.com/promptlabth/ms-payments/usecases"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	_ "github.com/promptlabth/ms-payments/docs"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func CORSMiddleware() gin.HandlerFunc {
@@ -42,6 +43,12 @@ func CORSMiddleware() gin.HandlerFunc {
 
 var err error
 
+// @title 	Tag Service API
+// @version	1.0
+// @description A Tag service API in Go using Gin framework
+
+// @host 	localhost:8080
+// @BasePath /api
 func main() {
 	database.DB, err = gorm.Open(postgres.Open(
 		database.DbURL(database.BuildDBConfig()),
@@ -53,12 +60,7 @@ func main() {
 	// auto migrate
 	database.DB.AutoMigrate(
 		&entities.Coin{},
-		&entities.Feature{},
-		&entities.Payment{},
-		&entities.PaymentMethod{},
-		&entities.Feature{},
 		&entities.User{},
-		&entities.PaymentSubscription{},
 		&entities.Plan{},
 	)
 	// database.DB.AutoMigrate()
@@ -66,6 +68,8 @@ func main() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.Default()
+	// add swagger
+	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	// to set CORS
 	r.Use(CORSMiddleware())
 
@@ -78,23 +82,17 @@ func main() {
 		c.JSON(200, gin.H{"hello": "world"})
 	})
 
-	repo := &repository.PaymentRepository{}
-	db, err := database.DB.DB()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// the clean arch
-	repo.DB = db
-	usecase := usecases.NewPaymentUsecase(repo)
-	controller := controllers.PaymentController{Usecase: usecase}
 
 	routes.CoinRoute(r, database.DB)
-	routes.PaymentSubscriptionRoute(r, database.DB)
 
 	routes.SubscriptionRoute(r, database.DB)
 
-	r.POST("/payment", controller.CreatePayment)
+	routes.WebhookRoute(r, database.DB)
 
 	port := os.Getenv("PORT")
 	if port == "" {

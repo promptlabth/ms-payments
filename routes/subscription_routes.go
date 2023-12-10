@@ -14,11 +14,20 @@ func SubscriptionRoute(r *gin.Engine, DB *gorm.DB) {
 	// initial a repo, usecase, control
 	userRepo := repository.NewUserRepository(DB)
 	userUseCases := usecases.NewUserUseCase(userRepo)
-	subscriptionReqUrlController := controllers.NewSubscriptionReqUrlController(userUseCases)
+
+	planRepo := repository.NewPlanRepository(DB)
+	planUsecase := usecases.NewPlanUsecase(planRepo)
+
+	subscriptionController := controllers.NewSubscriptionReqUrlController(
+		userUseCases,
+		planUsecase,
+	)
 
 	// use a middleware to route subscription
-	subScription := r.Group("/subsctiption")
+	subScription := r.Group("/subscription")
 	protect := subScription.Use(middlewares.AuthorizeFirebase())
 
-	protect.POST("/get-url", subscriptionReqUrlController.GetSubscriptionUrl)
+	protect.POST("/get-url", subscriptionController.GetSubscriptionUrl)
+
+	protect.DELETE("/cancle", subscriptionController.CancelSubscription)
 }

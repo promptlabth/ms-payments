@@ -44,6 +44,10 @@ To run unit tests, execute:
 go test ./...
 ```
 
+## Swaggle
+```
+http://localhost:8080/docs/index.html
+```
 
 
 
