@@ -107,8 +107,8 @@ func (t *WebhookController) CreateCustomerSubscription(c *gin.Context, jsonData 
 	}
 
 	if paymentSubscription.Status != "active" {
-		c.JSON(400, gin.H{
-			"err": "การเริ่มต้นระบบไม่สามารถใช้งานได้",
+		c.JSON(200, gin.H{
+			"err": "สถานะการซื้อขายยังไม่ active กรุณาจ่ายเงินเพื่อให้เราให้สิทธิ์การเข้าใช้งาน subscription",
 		})
 		return
 	}
