@@ -57,3 +57,14 @@ http://localhost:8080/docs/index.html
 3. `usecases` it will contain a business usecase of the repository => before select should do something ? before insert should before do some thing ?
 4. `controllers` it will be for validate a data and prepare a data before send a data to business usecase
 5. `routes` is for define a routing url 
+
+
+# Note Deployment
+
+`LOCAL` state : state Local Development
+
+`DEV` state: state Dev on cloud Dev Mode [EX: Test on Cloud run]
+
+`STATING` state : state same in prod mode but not release [Ex: Test Delopyment but not release]
+
+`PROD` state: State Release on Production 
