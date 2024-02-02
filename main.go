@@ -1,8 +1,13 @@
 package main
 
 import (
+	"context"
 	"log"
+	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/promptlabth/ms-payments/database"
 	"github.com/promptlabth/ms-payments/entities"
@@ -50,6 +55,16 @@ var err error
 // @host 	localhost:8080
 // @BasePath /api
 func main() {
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
+
+	switch os.Getenv("ENV") {
+	case "PROD":
+		gin.SetMode(gin.ReleaseMode)
+	default:
+		gin.SetMode(gin.DebugMode)
+	}
+
 	database.DB, err = gorm.Open(postgres.Open(
 		database.DbURL(database.BuildDBConfig()),
 	), &gorm.Config{})
@@ -64,9 +79,6 @@ func main() {
 		&entities.Plan{},
 	)
 	// database.DB.AutoMigrate()
-	if os.Getenv("BaseOn") != "DEV" {
-		gin.SetMode(gin.ReleaseMode)
-	}
 	r := gin.Default()
 	// add swagger
 	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
@@ -99,5 +111,30 @@ func main() {
 		port = "8080" // Default port if not specified
 	}
 
-	r.Run(":" + port)
+	srv := &http.Server{
+		Addr:              ":" + port,
+		Handler:           r,
+		ReadHeaderTimeout: 5 * time.Second,
+	}
+
+	go func() {
+		log.Printf("Starting Server At Addr : %s", srv.Addr)
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("listen: %s\n", err)
+		}
+	}()
+
+	<-ctx.Done()
+	stop()
+	log.Println("shutting down gracefully, press Ctrl+C again to force")
+
+	// The context is used to inform the server it has 5 seconds to finish
+	// the request it is currently handling
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatal("Server forced to shutdown: ", err)
+	}
+
+	log.Println("Server exiting")
 }
