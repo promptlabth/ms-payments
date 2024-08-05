@@ -3,8 +3,8 @@ package entities
 
 type Plan struct {
 	Id          int    `gorm:"primaryKey;autoIncrement:true"`
-	PlanType    string `gorm:"column:planType"`
-	MaxMessages int    `gorm:"column:maxMessages"`
+	PlanType    string `gorm:"column:plan_type"`
+	MaxMessages int    `gorm:"column:max_messages"`
 	ProductID   string `gorm:"uniqueIndex:idx_plan_product_id"`
 
 	Users []User `gorm:"foreignKey:PlanID"`
