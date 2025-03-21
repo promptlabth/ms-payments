@@ -27,9 +27,10 @@ func NewSubscriptionReqUrlController(
 
 // Request Struct Input
 type SubscriptionReqUrl struct {
-	PrizeID string
-	WebUrl  string
-	PlanID  int
+	PrizeID       string
+	WebUrl        string
+	PlanID        int
+	PaymentMethod string
 }
 
 func (t *SubscriptionReqUrlController) GetSubscriptionUrl(c *gin.Context) {
@@ -88,13 +89,28 @@ func (t *SubscriptionReqUrlController) GetSubscriptionUrl(c *gin.Context) {
 		return
 	}
 
+	// if one-time payment set to payment mode
+	var subscriptionMode string
+	if subscriptionReqUrl.PaymentMethod == "promptpay" {
+		subscriptionMode = "payment"
+	} else {
+		subscriptionMode = "subscription"
+	}
+
+	// if no payment method found, default to card (Monthly Subscription)
+	// if one-time payment set to promptpay and card
+	var paymentMethod []string
+	if subscriptionReqUrl.PaymentMethod == "" {
+		paymentMethod = []string{"card"}
+	} else if subscriptionReqUrl.PaymentMethod == "promptpay" {
+		paymentMethod = []string{"promptpay", "card"}
+	}
+
 	// to create a cehckout url from stripe (make subscription url to customer)
 	checkoutSession, err := services.CreateCheckoutSession(
 		subscriptionReqUrl.PrizeID,
-		"subscription",
-		[]string{
-			"card",
-		},
+		subscriptionMode,
+		paymentMethod,
 		user.StripeId,
 		subscriptionReqUrl.WebUrl,
 		subscriptionReqUrl.PlanID,
