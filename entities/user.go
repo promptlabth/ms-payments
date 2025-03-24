@@ -1,5 +1,7 @@
 package entities
 
+import "time"
+
 type User struct {
 	Id          int    `gorm:"primaryKey;autoIncrement:true"`
 	Firebase_id string `gorm:"uniqueIndex:idx_user_firebase_id"`
@@ -12,6 +14,9 @@ type User struct {
 
 	PlanID *uint `valid:"-"`
 	Plan   Plan  `gorm:"references:Id" valid:"-"`
+
+	Sub_date     time.Time `gorm:"type:timestamp"`
+	End_sub_date time.Time `gorm:"type:timestamp"`
 }
 
 func (b *User) TableName() string {

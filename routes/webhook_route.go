@@ -64,6 +64,11 @@ func WebhookRoute(r *gin.Engine, DB *gorm.DB) {
 			c.JSON(200, gin.H{
 				"Test": event,
 			})
+		// One-time Payment
+		case "payment_intent.succeeded":
+			// Handle One-Time payment success
+			fmt.Println("================ EVENT payment_intent.succeeded ======================", event.Object)
+			subscriptionController.OneTimeCustomerSubscription(c, jsonData)
 		default:
 			fmt.Printf("Unhandled event type: %s\n", event.Type)
 		}
