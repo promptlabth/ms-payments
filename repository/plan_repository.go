@@ -43,3 +43,10 @@ func (t *planRepository) CreateAPlan(plan *entities.Plan) error {
 	}
 	return nil
 }
+
+func (t *planRepository) GetAPlanByPrice(plan *entities.Plan, price int) error {
+	if err := t.conn.Where("price = ?", price).First(plan).Error; err != nil {
+		return err
+	}
+	return nil
+}
