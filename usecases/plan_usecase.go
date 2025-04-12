@@ -42,3 +42,10 @@ func (t *planUsecase) CreateAPlan(plan *entities.Plan) error {
 	}
 	return nil
 }
+
+func (t *planUsecase) GetAPlanByPrice(plan *entities.Plan, price int) error {
+	if err := t.planRepo.GetAPlanByPrice(plan, price); err != nil {
+		return err
+	}
+	return nil
+}

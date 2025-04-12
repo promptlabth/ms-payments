@@ -43,6 +43,8 @@ func (t *SubscriptionReqUrlController) GetSubscriptionUrl(c *gin.Context) {
 		return
 	}
 
+	// fmt.Println("subscriptionReqUrl", subscriptionReqUrl)
+
 	// get a firebase UID from gin context
 	firebaseUID := c.GetString("firebase_id")
 
@@ -91,7 +93,7 @@ func (t *SubscriptionReqUrlController) GetSubscriptionUrl(c *gin.Context) {
 
 	// if one-time payment set to payment mode
 	var subscriptionMode string
-	if subscriptionReqUrl.PaymentMethod == "promptpay" {
+	if subscriptionReqUrl.PaymentMethod == "payment" {
 		subscriptionMode = "payment"
 	} else {
 		subscriptionMode = "subscription"
@@ -100,10 +102,10 @@ func (t *SubscriptionReqUrlController) GetSubscriptionUrl(c *gin.Context) {
 	// if no payment method found, default to card (Monthly Subscription)
 	// if one-time payment set to promptpay and card
 	var paymentMethod []string
-	if subscriptionReqUrl.PaymentMethod == "" {
-		paymentMethod = []string{"card"}
-	} else if subscriptionReqUrl.PaymentMethod == "promptpay" {
+	if subscriptionMode == "payment" {
 		paymentMethod = []string{"promptpay", "card"}
+	} else {
+		paymentMethod = []string{"card"}
 	}
 
 	// to create a cehckout url from stripe (make subscription url to customer)

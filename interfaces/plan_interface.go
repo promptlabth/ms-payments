@@ -7,6 +7,7 @@ type PlanRepository interface {
 	GetAPlanByPriceID(plan *entities.Plan, id string) error
 	CreateAPlan(plan *entities.Plan) error
 	GetAPlanByProdID(plan *entities.Plan, id string) error
+	GetAPlanByPrice(plan *entities.Plan, price int) error
 }
 
 type PlanUsecase interface {
@@ -14,4 +15,5 @@ type PlanUsecase interface {
 	GetAPlanByPriceID(plan *entities.Plan, id string) error
 	CreateAPlan(plan *entities.Plan) error
 	GetAPlanByProdID(plan *entities.Plan, id string) error
+	GetAPlanByPrice(plan *entities.Plan, price int) error
 }

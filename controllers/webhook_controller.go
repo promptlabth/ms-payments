@@ -241,29 +241,17 @@ func (t *WebhookController) OneTimeCustomerSubscription(c *gin.Context, jsonData
 	}
 
 	customerID := paymentSubscription.Customer.ID
-	planPrice := paymentSubscription.Amount
+	planPrice := int(paymentSubscription.Amount) / 100 // convert to baht (from 5900 to decimal 59.00)
 	startTime := time.Unix(paymentSubscription.Created, 0)
 	endTime := time.Unix(paymentSubscription.Created, 0).AddDate(0, 1, 0)
 
-	var planId uint
-	switch planPrice {
-	case 5900:
-		planId = 1
-	case 19900:
-		planId = 2
-	case 29900:
-		planId = 3
-	default:
-		planId = 4
+	var plan entities.Plan
+	if err := t.planUsecase.GetAPlanByPrice(&plan, planPrice); err != nil {
+		c.JSON(400, gin.H{
+			"err": err,
+		})
+		return
 	}
-
-	// var plan entities.Plan
-	// if err := t.planUsecase.GetAPlan(&plan, int(planId)); err != nil {
-	// 	c.JSON(400, gin.H{
-	// 		"err": err,
-	// 	})
-	// 	return
-	// }
 
 	var user entities.User
 	if err := t.userUsecase.GetAUserByStripeID(&user, customerID); err != nil {
@@ -272,6 +260,8 @@ func (t *WebhookController) OneTimeCustomerSubscription(c *gin.Context, jsonData
 		})
 		return
 	}
+
+	planId := uint(plan.Id)
 
 	user.PlanID = &planId
 	user.Sub_date = startTime
