@@ -17,6 +17,7 @@ type User struct {
 
 	Sub_date     time.Time `gorm:"type:timestamp"`
 	End_sub_date time.Time `gorm:"type:timestamp"`
+	Monthly      bool      `gorm:"column:monthly"`
 }
 
 func (b *User) TableName() string {
