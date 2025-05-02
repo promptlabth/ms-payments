@@ -260,3 +260,9 @@ func (t *SubscriptionReqUrlController) GetOneTimeSubscriptionUrl(c *gin.Context)
 	})
 
 }
+
+func (t *SubscriptionReqUrlController) TestSubscriptionUrl(c *gin.Context) {
+	c.JSON(201, gin.H{
+		"url": "OK Test",
+	})
+}
