@@ -110,7 +110,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080" // Default port if not specified
+		port = "8081" // Default port if not specified
 	}
 
 	srv := &http.Server{
