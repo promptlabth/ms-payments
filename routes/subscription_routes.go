@@ -29,5 +29,7 @@ func SubscriptionRoute(r *gin.Engine, DB *gorm.DB) {
 
 	protect.POST("/get-url", subscriptionController.GetSubscriptionUrl)
 
+	protect.POST("/get-one-time-url", subscriptionController.GetOneTimeSubscriptionUrl)
+
 	protect.DELETE("/cancle", subscriptionController.CancelSubscription)
 }

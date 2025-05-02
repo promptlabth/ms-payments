@@ -77,6 +77,7 @@ func (t *WebhookController) CustromerSubscriptionUpdate(c *gin.Context, jsonData
 	user.PlanID = &planId
 	user.Sub_date = startTime
 	user.End_sub_date = endTime
+	user.Monthly = true
 
 	if err := t.userUsecase.UpdateAUser(&user, strconv.Itoa(user.Id)); err != nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{
@@ -144,6 +145,7 @@ func (t *WebhookController) CreateCustomerSubscription(c *gin.Context, jsonData 
 	user.Plan = plan
 	user.Sub_date = startTime
 	user.End_sub_date = endTime
+	user.Monthly = true
 
 	if err := t.userUsecase.UpdateAUser(&user, strconv.Itoa(user.Id)); err != nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{
@@ -202,6 +204,7 @@ func (t *WebhookController) DeleteSubscription(c *gin.Context, jsonData []byte) 
 	user.Plan = plan
 	user.Sub_date = time.Time{}
 	user.End_sub_date = time.Time{}
+	user.Monthly = false
 
 	if err := t.userUsecase.UpdateAUser(&user, strconv.Itoa(user.Id)); err != nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{
@@ -266,6 +269,7 @@ func (t *WebhookController) OneTimeCustomerSubscription(c *gin.Context, jsonData
 	user.PlanID = &planId
 	user.Sub_date = startTime
 	user.End_sub_date = endTime
+	user.Monthly = false
 
 	if err := t.userUsecase.UpdateAUser(&user, strconv.Itoa(user.Id)); err != nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{

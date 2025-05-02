@@ -27,10 +27,9 @@ func NewSubscriptionReqUrlController(
 
 // Request Struct Input
 type SubscriptionReqUrl struct {
-	PrizeID       string
-	WebUrl        string
-	PlanID        int
-	PaymentMethod string
+	PrizeID string
+	WebUrl  string
+	PlanID  int
 }
 
 func (t *SubscriptionReqUrlController) GetSubscriptionUrl(c *gin.Context) {
@@ -42,8 +41,6 @@ func (t *SubscriptionReqUrlController) GetSubscriptionUrl(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	// fmt.Println("subscriptionReqUrl", subscriptionReqUrl)
 
 	// get a firebase UID from gin context
 	firebaseUID := c.GetString("firebase_id")
@@ -91,28 +88,13 @@ func (t *SubscriptionReqUrlController) GetSubscriptionUrl(c *gin.Context) {
 		return
 	}
 
-	// if one-time payment set to payment mode
-	var subscriptionMode string
-	if subscriptionReqUrl.PaymentMethod == "payment" {
-		subscriptionMode = "payment"
-	} else {
-		subscriptionMode = "subscription"
-	}
-
-	// if no payment method found, default to card (Monthly Subscription)
-	// if one-time payment set to promptpay and card
-	var paymentMethod []string
-	if subscriptionMode == "payment" {
-		paymentMethod = []string{"promptpay", "card"}
-	} else {
-		paymentMethod = []string{"card"}
-	}
-
 	// to create a cehckout url from stripe (make subscription url to customer)
 	checkoutSession, err := services.CreateCheckoutSession(
 		subscriptionReqUrl.PrizeID,
-		subscriptionMode,
-		paymentMethod,
+		"subscription",
+		[]string{
+			"card",
+		},
 		user.StripeId,
 		subscriptionReqUrl.WebUrl,
 		subscriptionReqUrl.PlanID,
@@ -195,5 +177,86 @@ func (t *SubscriptionReqUrlController) CancelSubscription(c *gin.Context) {
 		gin.H{
 			"data": subscription,
 		})
+
+}
+
+func (t *SubscriptionReqUrlController) GetOneTimeSubscriptionUrl(c *gin.Context) {
+
+	// checkout session to stripe service
+	var subscriptionReqUrl SubscriptionReqUrl
+	if err := c.ShouldBindJSON(&subscriptionReqUrl); err != nil {
+		// Respond with a 400 Bad Request status code and detailed error message
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// get a firebase UID from gin context
+	firebaseUID := c.GetString("firebase_id")
+
+	var user entities.User
+
+	// use firebase UID to find is found in database
+	if err := t.userUsecase.GetAUserByFirebaseId(&user, firebaseUID); err != nil {
+		c.JSON(401, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	// check is have a customer stripe id?
+	if user.StripeId == "" {
+		// if not found a stripe id will be create a customer stripe id to this user and update it
+
+		// create a customer in stripe
+		cus, err := services.CreateCustomer(user.Email, user.Name, user.Firebase_id)
+		if err != nil {
+			c.JSON(400, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		// update a user in stripe
+		user.StripeId = cus.ID
+		if err := t.userUsecase.UpdateAUser(&user, strconv.Itoa(user.Id)); err != nil {
+			if err != nil {
+				c.JSON(403, gin.H{
+					"error": err.Error(),
+				})
+				return
+			}
+		}
+	}
+
+	// check a customer is have a subscription? (when user click a same plan [other plan mean upgrade])
+	if *user.PlanID != uint(4) {
+		c.JSON(404, gin.H{
+			"error": "คุณไม่สามารถ subscription อีกครั้งได้",
+		})
+		return
+	}
+
+	// to create a checkout url from stripe (make subscription url to customer)
+	checkoutSession, err := services.CreateCheckoutSession(
+		subscriptionReqUrl.PrizeID,
+		"payment",
+		[]string{
+			"card",
+			"promptpay",
+		},
+		user.StripeId,
+		subscriptionReqUrl.WebUrl,
+		subscriptionReqUrl.PlanID,
+	)
+	if err != nil {
+		// if error found will return can't checkout session in backend
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// if everything is successful will send a url to checkout to frontend
+	c.JSON(201, gin.H{
+		"url": checkoutSession.URL,
+	})
 
 }
